@@ -21,14 +21,18 @@
     <dd>
       <%= @the_day_entry.user_id %>
     </dd>
-
     <dt>
       Highlight of the day
     </dt>
     <dd>
       <%= @the_day_entry.highlight_of_the_day %>
     </dd>
-
+    <dt>
+    Date
+    </dt>
+   <dd>
+ <%= @the_day_entry.date %>
+   </dd>
     <dt>
       Photo
     </dt>
@@ -42,6 +46,7 @@
     <dd>
       <%= time_ago_in_words(@the_day_entry.created_at) %> ago
     </dd>
+  
 
     <dt>
       Updated at
@@ -86,6 +91,10 @@
 
       <input type="text" id="photo_box" name="query_photo" value="<%= @the_day_entry.photo %>">
     </div>
+    <div>
+  <label for="date_box">Date</label>
+  <input type="date" id="date_box" name="query_date" value="<%= @the_day_entry.date %>">
+</div>
 
     <button type="submit">
       Update day entry

@@ -1,11 +1,23 @@
 class DayEntriesController < ApplicationController
-  def index
-    matching_day_entries = DayEntry.all
+ def index
+  matching_day_entries = DayEntry.all
+  @list_of_day_entries = matching_day_entries.order({ :created_at => :desc })
 
-    @list_of_day_entries = matching_day_entries.order({ :created_at => :desc })
+  respond_to do |format|
+    format.html { render({ :template => "day_entry_templates/index" }) }
 
-    render({ :template => "day_entry_templates/index" })
+    format.json do
+      render :json => DayEntry.where.not({ :date => nil }).map { |e|
+        {
+          :id => e.id,
+          :title => (e.highlight_of_the_day.presence || "Day entry"),
+          :start => e.date,
+          :allDay => true
+        }
+      }
+    end
   end
+end
 
   def show
     the_id = params.fetch("path_id")
@@ -20,6 +32,7 @@ class DayEntriesController < ApplicationController
   def create
     the_day_entry = DayEntry.new
     the_day_entry.user_id = params.fetch("query_user_id")
+    the_day_entry.date = params.fetch("query_date")
     the_day_entry.highlight_of_the_day = params.fetch("query_highlight_of_the_day")
     the_day_entry.photo = params.fetch("query_photo")
 
@@ -36,6 +49,7 @@ class DayEntriesController < ApplicationController
     the_day_entry = DayEntry.where({ :id => the_id }).at(0)
 
     the_day_entry.user_id = params.fetch("query_user_id")
+    the_day_entry.date = params.fetch("query_date")
     the_day_entry.highlight_of_the_day = params.fetch("query_highlight_of_the_day")
     the_day_entry.photo = params.fetch("query_photo")
 

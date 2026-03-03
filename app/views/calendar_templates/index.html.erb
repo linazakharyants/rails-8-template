@@ -1,11 +1,29 @@
-<h1><%= @month.strftime("%B %Y") %></h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+<h1 style="margin: 16px 0;">Calendar</h1>
 
-  <% @dates.each do |date| %>
-    <div style="border: 1px solid black; padding: 10px;">
-      <strong><%= date.day %></strong>
-    </div>
-  <% end %>
+<div id="calendar" style="max-width: 1100px;"></div>
 
-</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var calendarEl = document.getElementById("calendar");
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      events: "/day_entries.json",
+
+      // click an existing entry on the calendar -> go to its show page
+      eventClick: function(info) {
+        window.location.href = "/day_entries/" + info.event.id;
+      },
+
+      // click an empty day -> go to the DayEntries page with date prefilled
+      dateClick: function(info) {
+        window.location.href = "/day_entries?date=" + info.dateStr;
+      }
+    });
+
+    calendar.render();
+  });
+</script>

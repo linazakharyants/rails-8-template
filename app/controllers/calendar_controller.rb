@@ -1,16 +1,31 @@
 class CalendarController < ApplicationController
+  def index
+    respond_to do |format|
+      format.html do
+        render({ :template => "calendar_templates/index" })
+      end
 
-def index
-  # Determine which month to show
-  @month = params[:month].present? ? Date.parse(params[:month]) : Date.current
-  @month = @month.beginning_of_month
+      format.json do
+        start_param = params["start"]
+        end_param   = params["end"]
 
-  # Build grid range (Sunday → Saturday layout)
-  grid_start = @month.beginning_of_week(:sunday)
-  grid_end   = @month.end_of_month.end_of_week(:sunday)
+        scoped = DayEntry.all
 
-  @dates = (grid_start..grid_end).to_a
-   render({ :template => "calendar_templates/index" })
-end
+        if start_param.present? && end_param.present?
+          start_date = Date.parse(start_param)
+          end_date   = Date.parse(end_param)
+          scoped = scoped.where({ :date => start_date...end_date })
+        end
 
+        render :json => scoped.map { |e|
+          {
+            :id => e.id,
+            :title => (e.highlight_of_the_day.presence || "Day entry"),
+            :start => e.date,
+            :allDay => true
+          }
+        }
+      end
+    end
+  end
 end
