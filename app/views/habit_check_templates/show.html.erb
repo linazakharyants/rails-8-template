@@ -1,0 +1,111 @@
+<h1>
+  Habit check #<%= @the_habit_check.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/habit_checks">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_habit_check/<%= @the_habit_check.id %>">
+      Delete habit check
+    </a>
+  </div>
+  <dl>
+    <dt>
+      User
+    </dt>
+    <dd>
+      <%= @the_habit_check.user_id %>
+    </dd>
+
+    <dt>
+      Habit
+    </dt>
+    <dd>
+      <%= @the_habit_check.habit_id %>
+    </dd>
+
+    <dt>
+      Completed
+    </dt>
+    <dd>
+      <%= @the_habit_check.completed %>
+    </dd>
+
+    <dt>
+      Day entry
+    </dt>
+    <dd>
+      <%= @the_habit_check.day_entry_id %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_habit_check.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_habit_check.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit habit check
+    </h2>
+  </header>
+
+  <form action="/modify_habit_check/<%= @the_habit_check.id %>"  method="post" >
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_habit_check.user_id %>">
+    </div>
+
+    <div>
+      <label for="habit_id_box">
+        Habit
+      </label>
+
+      <input type="text" id="habit_id_box" name="query_habit_id" value="<%= @the_habit_check.habit_id %>">
+    </div>
+
+    <div>
+      <label for="completed_box">
+        Completed
+      </label>
+
+      <input type="text" id="completed_box" name="query_completed" value="<%= @the_habit_check.completed %>">
+    </div>
+
+    <div>
+      <label for="day_entry_id_box">
+        Day entry
+      </label>
+
+      <input type="text" id="day_entry_id_box" name="query_day_entry_id" value="<%= @the_habit_check.day_entry_id %>">
+    </div>
+
+    <button type="submit">
+      Update habit check
+    </button>
+  </form>
+</article>
+
+<hr>

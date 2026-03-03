@@ -1,0 +1,2 @@
+class HabitCheck < ApplicationRecord
+end

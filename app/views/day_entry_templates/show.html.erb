@@ -1,0 +1,96 @@
+<h1>
+  Day entry #<%= @the_day_entry.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/day_entries">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_day_entry/<%= @the_day_entry.id %>">
+      Delete day entry
+    </a>
+  </div>
+  <dl>
+    <dt>
+      User
+    </dt>
+    <dd>
+      <%= @the_day_entry.user_id %>
+    </dd>
+
+    <dt>
+      Highlight of the day
+    </dt>
+    <dd>
+      <%= @the_day_entry.highlight_of_the_day %>
+    </dd>
+
+    <dt>
+      Photo
+    </dt>
+    <dd>
+      <%= @the_day_entry.photo %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_day_entry.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_day_entry.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit day entry
+    </h2>
+  </header>
+
+  <form action="/modify_day_entry/<%= @the_day_entry.id %>"  method="post" >
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_day_entry.user_id %>">
+    </div>
+
+    <div>
+      <label for="highlight_of_the_day_box">
+        Highlight of the day
+      </label>
+
+      <input type="text" id="highlight_of_the_day_box" name="query_highlight_of_the_day" value="<%= @the_day_entry.highlight_of_the_day %>">
+    </div>
+
+    <div>
+      <label for="photo_box">
+        Photo
+      </label>
+
+      <input type="text" id="photo_box" name="query_photo" value="<%= @the_day_entry.photo %>">
+    </div>
+
+    <button type="submit">
+      Update day entry
+    </button>
+  </form>
+</article>
+
+<hr>

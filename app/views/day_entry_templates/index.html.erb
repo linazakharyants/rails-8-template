@@ -1,0 +1,59 @@
+<h1>
+  List of all day entries
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new day entry
+    </h2>
+  </header>
+
+  <form action="/insert_day_entry" method="post">
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id">
+    </div>
+
+    <div>
+      <label for="highlight_of_the_day_box">
+        Highlight of the day
+      </label>
+
+      <input type="text" id="highlight_of_the_day_box" name="query_highlight_of_the_day">
+    </div>
+
+    <div>
+      <label for="photo_box">
+        Photo
+      </label>
+
+      <input type="text" id="photo_box" name="query_photo">
+    </div>
+
+    <button type="submit">
+      Create day entry
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_day_entries.each do |a_day_entry| %>
+      <li>
+        <a href="/day_entries/<%= a_day_entry.id %>">
+          Day entry #<%= a_day_entry.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>

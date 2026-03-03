@@ -1,0 +1,11 @@
+<h1><%= @month.strftime("%B %Y") %></h1>
+
+<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;">
+
+  <% @dates.each do |date| %>
+    <div style="border: 1px solid black; padding: 10px;">
+      <strong><%= date.day %></strong>
+    </div>
+  <% end %>
+
+</div>

@@ -1,0 +1,67 @@
+<h1>
+  List of all habit checks
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new habit check
+    </h2>
+  </header>
+
+  <form action="/insert_habit_check" method="post">
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id">
+    </div>
+
+    <div>
+      <label for="habit_id_box">
+        Habit
+      </label>
+
+      <input type="text" id="habit_id_box" name="query_habit_id">
+    </div>
+
+    <div>
+      <label for="completed_box">
+        Completed
+      </label>
+
+      <input type="text" id="completed_box" name="query_completed">
+    </div>
+
+    <div>
+      <label for="day_entry_id_box">
+        Day entry
+      </label>
+
+      <input type="text" id="day_entry_id_box" name="query_day_entry_id">
+    </div>
+
+    <button type="submit">
+      Create habit check
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_habit_checks.each do |a_habit_check| %>
+      <li>
+        <a href="/habit_checks/<%= a_habit_check.id %>">
+          Habit check #<%= a_habit_check.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>
