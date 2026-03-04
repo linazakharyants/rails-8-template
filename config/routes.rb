@@ -3,6 +3,12 @@ Rails.application.routes.draw do
   get("/", { :controller => "calendar", :action => "index"})
   get("/calendar", { :controller => "calendar", :action => "index"})
 
+  get("/highlights/:date", { :controller => "day_entries", :action => "edit_highlight" })
+  post("/upsert_highlight/:date", { :controller => "day_entries", :action => "upsert_highlight" })
+
+  get("/frames/:path_id", { :controller => "day_entries", :action => "edit_frame" })
+  post("/modify_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })
+
   # Routes for the Day entry resource:
 
   # CREATE

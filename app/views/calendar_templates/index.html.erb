@@ -44,14 +44,23 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       var link = document.createElement("a");
-      link.href = photo;
-      link.target = "_blank";
+
+      /* goes to your frame editor route */
+      link.href = "/frames/" + info.event.id;
+
       link.innerText = "Frame of the Day";
       link.className = "frame-link";
 
       link.style.display = "block";
       link.style.marginTop = "4px";
       link.style.fontSize = "12px";
+
+      /* prevent calendar clicks interfering */
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = link.href;
+      });
 
       var frame = dayCell.querySelector(".fc-daygrid-day-frame");
 
@@ -60,12 +69,13 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     },
 
+    /* clicking the highlight text */
     eventClick: function(info) {
-      window.location.href = "/day_entries/" + info.event.id;
-    },
 
-    dateClick: function(info) {
-      window.location.href = "/day_entries?date=" + info.dateStr;
+      info.jsEvent.preventDefault();
+      info.jsEvent.stopPropagation();
+
+      window.location.href = "/highlights/" + info.event.startStr;
     }
 
   });
