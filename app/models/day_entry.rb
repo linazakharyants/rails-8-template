@@ -11,4 +11,5 @@
 #  user_id              :integer
 #
 class DayEntry < ApplicationRecord
+  has_one_attached :photo
 end

@@ -1,29 +1,76 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-<h1 style="margin: 16px 0;">Calendar</h1>
+<h1>Calendar</h1>
 
-<div id="calendar" style="max-width: 1100px;"></div>
+<div id="calendar" style="max-width: 1000px;"></div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var calendarEl = document.getElementById("calendar");
+document.addEventListener("DOMContentLoaded", function() {
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: "dayGridMonth",
-      events: "/day_entries.json",
+  var calendarElement = document.getElementById("calendar");
 
-      // click an existing entry on the calendar -> go to its show page
-      eventClick: function(info) {
-        window.location.href = "/day_entries/" + info.event.id;
-      },
+  var calendar = new FullCalendar.Calendar(calendarElement, {
 
-      // click an empty day -> go to the DayEntries page with date prefilled
-      dateClick: function(info) {
-        window.location.href = "/day_entries?date=" + info.dateStr;
+    initialView: "dayGridMonth",
+
+    events: "/calendar.json",
+
+    eventContent: function(info) {
+
+      var title = info.event.title;
+
+      return {
+        html: "<div style='font-size:12px; font-weight:bold;'>" + title + "</div>"
+      };
+    },
+
+    eventDidMount: function(info) {
+
+      var photo = info.event.extendedProps.photo;
+
+      if (!photo) {
+        return;
       }
-    });
 
-    calendar.render();
+      var dayCell = info.el.closest(".fc-daygrid-day");
+
+      if (!dayCell) {
+        return;
+      }
+
+      if (dayCell.querySelector(".frame-link")) {
+        return;
+      }
+
+      var link = document.createElement("a");
+      link.href = photo;
+      link.target = "_blank";
+      link.innerText = "Frame of the Day";
+      link.className = "frame-link";
+
+      link.style.display = "block";
+      link.style.marginTop = "4px";
+      link.style.fontSize = "12px";
+
+      var frame = dayCell.querySelector(".fc-daygrid-day-frame");
+
+      if (frame) {
+        frame.appendChild(link);
+      }
+    },
+
+    eventClick: function(info) {
+      window.location.href = "/day_entries/" + info.event.id;
+    },
+
+    dateClick: function(info) {
+      window.location.href = "/day_entries?date=" + info.dateStr;
+    }
+
   });
+
+  calendar.render();
+
+});
 </script>

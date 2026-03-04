@@ -9,7 +9,7 @@ class CalendarController < ApplicationController
         start_param = params["start"]
         end_param   = params["end"]
 
-        scoped = DayEntry.all
+        scoped = DayEntry.where.not({ :date => nil })
 
         if start_param.present? && end_param.present?
           start_date = Date.parse(start_param)
@@ -22,7 +22,10 @@ class CalendarController < ApplicationController
             :id => e.id,
             :title => (e.highlight_of_the_day.presence || "Day entry"),
             :start => e.date,
-            :allDay => true
+            :allDay => true,
+            :extendedProps => {
+              :photo => (e.photo.attached? ? url_for(e.photo) : nil)
+            }
           }
         }
       end

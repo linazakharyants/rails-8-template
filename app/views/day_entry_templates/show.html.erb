@@ -4,101 +4,66 @@
 
 <article>
   <div>
-    <a href="/day_entries">
-      Go back
-    </a>
+    <a href="/">Back to calendar</a>
   </div>
 
   <div>
-    <a href="/delete_day_entry/<%= @the_day_entry.id %>">
-      Delete day entry
-    </a>
+    <a href="/day_entries">All day entries</a>
   </div>
+
+  <div>
+    <a href="/delete_day_entry/<%= @the_day_entry.id %>">Delete day entry</a>
+  </div>
+
   <dl>
-    <dt>
-      User
-    </dt>
-    <dd>
-      <%= @the_day_entry.user_id %>
-    </dd>
-    <dt>
-      Highlight of the day
-    </dt>
-    <dd>
-      <%= @the_day_entry.highlight_of_the_day %>
-    </dd>
-    <dt>
-    Date
-    </dt>
-   <dd>
- <%= @the_day_entry.date %>
-   </dd>
-    <dt>
-      Photo
-    </dt>
-    <dd>
-      <%= @the_day_entry.photo %>
-    </dd>
+    <dt>Highlight of the day</dt>
+    <dd><%= @the_day_entry.highlight_of_the_day %></dd>
 
-    <dt>
-      Created at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_day_entry.created_at) %> ago
-    </dd>
-  
+    <div id="frame"></div>
+<dt>Frame of the Day</dt>
+<dd>
+  <% if @the_day_entry.photo.attached? %>
+    <%= image_tag url_for(@the_day_entry.photo), style: "max-width:300px; border-radius:10px;" %>
+  <% else %>
+    Frame your day
+  <% end %>
+</dd>
 
-    <dt>
-      Updated at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_day_entry.updated_at) %> ago
-    </dd>
+    <dt>Date</dt>
+    <dd><%= @the_day_entry.date %></dd>
+
+    <dt>Created at</dt>
+    <dd><%= time_ago_in_words(@the_day_entry.created_at) %> ago</dd>
+
+    <dt>Updated at</dt>
+    <dd><%= time_ago_in_words(@the_day_entry.updated_at) %> ago</dd>
   </dl>
 </article>
 
 <hr>
 
-
 <article>
   <header>
-    <h2>
-      Edit day entry
-    </h2>
+    <h2>Edit day entry</h2>
   </header>
 
-  <form action="/modify_day_entry/<%= @the_day_entry.id %>"  method="post" >
+  <form action="/modify_day_entry/<%= @the_day_entry.id %>" method="post" enctype="multipart/form-data">
     <div>
-      <label for="user_id_box">
-        User
-      </label>
-
-      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_day_entry.user_id %>">
-    </div>
-
-    <div>
-      <label for="highlight_of_the_day_box">
-        Highlight of the day
-      </label>
-
+      <label for="highlight_of_the_day_box">Highlight of the day</label>
       <input type="text" id="highlight_of_the_day_box" name="query_highlight_of_the_day" value="<%= @the_day_entry.highlight_of_the_day %>">
     </div>
 
     <div>
-      <label for="photo_box">
-        Photo
-      </label>
-
-      <input type="text" id="photo_box" name="query_photo" value="<%= @the_day_entry.photo %>">
+      <label for="photo_box">Frame of the Day (photo URL)</label>
+      <input type="file" name="query_photo">
     </div>
-    <div>
-  <label for="date_box">Date</label>
-  <input type="date" id="date_box" name="query_date" value="<%= @the_day_entry.date %>">
-</div>
 
-    <button type="submit">
-      Update day entry
-    </button>
+    <div>
+      <label for="date_box">Date</label>
+      <input type="date" id="date_box" name="query_date" value="<%= @the_day_entry.date %>">
+    </div>
+
+    <button type="submit">Update day entry</button>
   </form>
 </article>
 

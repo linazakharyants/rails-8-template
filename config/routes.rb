@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   get("/", { :controller => "calendar", :action => "index"})
+  get("/calendar", { :controller => "calendar", :action => "index"})
 
   # Routes for the Day entry resource:
 
