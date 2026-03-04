@@ -3,10 +3,39 @@
 
 <h1>Calendar</h1>
 
+<!-- Line of the Day Banner -->
+<div style="
+  max-width: 1000px;
+  padding: 12px 14px;
+  margin: 10px 0 14px 0;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+">
+  <a href="/highlights/<%= Date.today %>" style="text-decoration:none; color:inherit;">
+    <strong>Line of the day</strong>
+  </a>
+</div>
+
 <div id="calendar" style="max-width: 1000px;"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function truncate(str, maxLen) {
+    str = String(str || "").trim();
+    if (str.length <= maxLen) return str;
+    return str.slice(0, maxLen - 1).trim() + "…";
+  }
 
   var calendarElement = document.getElementById("calendar");
 
@@ -17,11 +46,10 @@ document.addEventListener("DOMContentLoaded", function() {
     events: "/calendar.json",
 
     eventContent: function(info) {
-
       var title = info.event.title;
 
       return {
-        html: "<div style='font-size:12px; font-weight:bold;'>" + title + "</div>"
+        html: "<div style='font-size:12px; font-weight:bold;'>" + escapeHtml(truncate(title, 22)) + "</div>"
       };
     },
 
@@ -29,25 +57,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var photo = info.event.extendedProps.photo;
 
-      if (!photo) {
-        return;
-      }
+      if (!photo) return;
 
       var dayCell = info.el.closest(".fc-daygrid-day");
 
-      if (!dayCell) {
-        return;
-      }
+      if (!dayCell) return;
 
-      if (dayCell.querySelector(".frame-link")) {
-        return;
-      }
+      if (dayCell.querySelector(".frame-link")) return;
 
       var link = document.createElement("a");
 
-      /* goes to your frame editor route */
       link.href = "/frames/" + info.event.id;
-
       link.innerText = "Frame of the Day";
       link.className = "frame-link";
 
@@ -55,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function() {
       link.style.marginTop = "4px";
       link.style.fontSize = "12px";
 
-      /* prevent calendar clicks interfering */
       link.addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -64,17 +83,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
       var frame = dayCell.querySelector(".fc-daygrid-day-frame");
 
-      if (frame) {
-        frame.appendChild(link);
-      }
+      if (frame) frame.appendChild(link);
     },
 
-    /* clicking the highlight text */
     eventClick: function(info) {
-
       info.jsEvent.preventDefault();
       info.jsEvent.stopPropagation();
-
       window.location.href = "/highlights/" + info.event.startStr;
     }
 

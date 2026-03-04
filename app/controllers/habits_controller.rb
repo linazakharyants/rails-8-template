@@ -18,34 +18,36 @@ class HabitsController < ApplicationController
   end
 
   def create
-    the_habit = Habit.new
-    the_habit.user_id = params.fetch("query_user_id")
-    the_habit.name = params.fetch("query_name")
-    the_habit.description = params.fetch("query_description")
+  the_habit = Habit.new
 
-    if the_habit.valid?
-      the_habit.save
-      redirect_to("/habits", { :notice => "Habit created successfully." })
-    else
-      redirect_to("/habits", { :alert => the_habit.errors.full_messages.to_sentence })
-    end
+  # TEMP until login exists:
+  the_habit.user_id = 1
+
+  the_habit.name = params.fetch("query_name")
+  the_habit.description = params.fetch("query_description")
+
+  if the_habit.valid?
+    the_habit.save
+    redirect_to("/habits", { :notice => "Habit created successfully." })
+  else
+    redirect_to("/habits", { :alert => the_habit.errors.full_messages.to_sentence })
   end
+end
 
   def update
-    the_id = params.fetch("path_id")
-    the_habit = Habit.where({ :id => the_id }).at(0)
+  the_id = params.fetch("path_id")
+  the_habit = Habit.where({ :id => the_id }).at(0)
 
-    the_habit.user_id = params.fetch("query_user_id")
-    the_habit.name = params.fetch("query_name")
-    the_habit.description = params.fetch("query_description")
+  the_habit.name = params.fetch("query_name")
+  the_habit.description = params.fetch("query_description")
 
-    if the_habit.valid?
-      the_habit.save
-      redirect_to("/habits/#{the_habit.id}", { :notice => "Habit updated successfully." } )
-    else
-      redirect_to("/habits/#{the_habit.id}", { :alert => the_habit.errors.full_messages.to_sentence })
-    end
+  if the_habit.valid?
+    the_habit.save
+    redirect_to("/habits/#{the_habit.id}", { :notice => "Habit updated successfully." })
+  else
+    redirect_to("/habits/#{the_habit.id}", { :alert => the_habit.errors.full_messages.to_sentence })
   end
+end
 
   def destroy
     the_id = params.fetch("path_id")

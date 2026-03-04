@@ -3,21 +3,26 @@ Rails.application.routes.draw do
   get("/", { :controller => "calendar", :action => "index"})
   get("/calendar", { :controller => "calendar", :action => "index"})
 
+  #daily entries
   get("/highlights/:date", { :controller => "day_entries", :action => "edit_highlight" })
   post("/upsert_highlight/:date", { :controller => "day_entries", :action => "upsert_highlight" })
 
+  #habits
   get("/frames/:path_id", { :controller => "day_entries", :action => "edit_frame" })
   post("/modify_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })
+
+
+  post("/insert_habit", { :controller => "habits", :action => "create" })
+  get("/habits", { :controller => "habits", :action => "index" })
+  
+  get("/habits/:path_id", { :controller => "habits", :action => "show" })
+  post("/modify_habit/:path_id", { :controller => "habits", :action => "update" })
+  get("/delete_habit/:path_id", { :controller => "habits", :action => "destroy" })
 
   # Routes for the Day entry resource:
 
   # CREATE
   post("/insert_day_entry", { :controller => "day_entries", :action => "create" })
-
-  # READ
-  get("/day_entries", { :controller => "day_entries", :action => "index" })
-
-  get("/day_entries/:path_id", { :controller => "day_entries", :action => "show" })
   
 
   # Routes for the Note resource:
