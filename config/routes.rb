@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get("/habits", { :controller => "habits", :action => "index" })
   
   get("/habits/:path_id", { :controller => "habits", :action => "show" })
+  get("/habits_manage", { :controller => "habits", :action => "manage" })
   post("/modify_habit/:path_id", { :controller => "habits", :action => "update" })
   get("/delete_habit/:path_id", { :controller => "habits", :action => "destroy" })
 

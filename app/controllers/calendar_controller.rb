@@ -1,8 +1,8 @@
 class CalendarController < ApplicationController
-  
   def index
     respond_to do |format|
       format.html do
+        @list_of_habits = Habit.order({ :created_at => :desc })
         render({ :template => "calendar_templates/index" })
       end
 
@@ -33,3 +33,4 @@ class CalendarController < ApplicationController
     end
   end
 end
+

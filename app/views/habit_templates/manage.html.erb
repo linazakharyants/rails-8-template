@@ -1,0 +1,49 @@
+<h1>
+   Add a habit to track
+</h1>
+
+<article>
+  <div>
+    <a href="/habits">Back to tracker</a>
+  </div>
+</article>
+
+<hr>
+
+<article>
+
+  <form action="/insert_habit" method="post">
+    <div>
+      <label for="name_box">Habit name</label>
+      <input type="text" id="name_box" name="query_name" placeholder="e.g. Gym, Read, No binge">
+    </div>
+
+    <div>
+      <label for="description_box">Description (optional)</label>
+      <input type="text" id="description_box" name="query_description">
+    </div>
+
+    <button type="submit">Add habit</button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <header>
+    <h2>Your habits</h2>
+  </header>
+
+  <ul>
+    <% @list_of_habits.each do |a_habit| %>
+      <li>
+        <a href="/habits/<%= a_habit.id %>"><%= a_habit.name %></a>
+        <% if a_habit.description.present? %>
+          — <%= a_habit.description %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>

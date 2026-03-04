@@ -34,6 +34,12 @@ class HabitsController < ApplicationController
   end
 end
 
+ def manage
+  matching_habits = Habit.all
+  @list_of_habits = matching_habits.order({ :created_at => :desc })
+  
+  render({ :template => "habit_templates/manage" })
+end
   def update
   the_id = params.fetch("path_id")
   the_habit = Habit.where({ :id => the_id }).at(0)

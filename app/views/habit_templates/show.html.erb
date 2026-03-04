@@ -1,11 +1,11 @@
 <h1>
-  Habit #<%= @the_habit.id %> details
+  Habit Tracker
 </h1>
 
 <article>
   <div>
     <a href="/habits">
-      Go back
+      Back to habits
     </a>
   </div>
 
@@ -14,83 +14,44 @@
       Delete habit
     </a>
   </div>
-  <dl>
-    <dt>
-      User
-    </dt>
-    <dd>
-      <%= @the_habit.user_id %>
-    </dd>
-
-    <dt>
-      Name
-    </dt>
-    <dd>
-      <%= @the_habit.name %>
-    </dd>
-
-    <dt>
-      Description
-    </dt>
-    <dd>
-      <%= @the_habit.description %>
-    </dd>
-
-    <dt>
-      Created at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_habit.created_at) %> ago
-    </dd>
-
-    <dt>
-      Updated at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_habit.updated_at) %> ago
-    </dd>
-  </dl>
 </article>
 
 <hr>
 
-
 <article>
   <header>
     <h2>
-      Edit habit
+      Update habit
     </h2>
   </header>
 
-  <form action="/modify_habit/<%= @the_habit.id %>"  method="post" >
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
-
-      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_habit.user_id %>">
-    </div>
+  <form action="/modify_habit/<%= @the_habit.id %>" method="post">
 
     <div>
       <label for="name_box">
-        Name
+        Habit name
       </label>
 
-      <input type="text" id="name_box" name="query_name" value="<%= @the_habit.name %>">
+      <input type="text"
+             id="name_box"
+             name="query_name"
+             value="<%= @the_habit.name %>">
     </div>
 
     <div>
       <label for="description_box">
-        Description
+        Description (optional)
       </label>
 
-      <input type="text" id="description_box" name="query_description" value="<%= @the_habit.description %>">
+      <input type="text"
+             id="description_box"
+             name="query_description"
+             value="<%= @the_habit.description %>">
     </div>
 
     <button type="submit">
       Update habit
     </button>
+
   </form>
 </article>
-
-<hr>
