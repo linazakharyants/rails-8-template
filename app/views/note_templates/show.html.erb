@@ -1,111 +1,23 @@
-<h1>
-  Note #<%= @the_note.id %> details
-</h1>
+<h1>Note</h1>
 
-<article>
-  <div>
-    <a href="/notes">
-      Go back
-    </a>
-  </div>
+<div style="margin: 10px 0;">
+  <a href="/notes">Back to notes</a>
+</div>
 
-  <div>
-    <a href="/delete_note/<%= @the_note.id %>">
-      Delete note
-    </a>
-  </div>
-  <dl>
-    <dt>
-      User
-    </dt>
-    <dd>
-      <%= @the_note.user_id %>
-    </dd>
-
-    <dt>
-      Title
-    </dt>
-    <dd>
-      <%= @the_note.title %>
-    </dd>
-
-    <dt>
-      Body
-    </dt>
-    <dd>
-      <%= @the_note.body %>
-    </dd>
-
-    <dt>
-      Day entry
-    </dt>
-    <dd>
-      <%= @the_note.day_entry_id %>
-    </dd>
-
-    <dt>
-      Created at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_note.created_at) %> ago
-    </dd>
-
-    <dt>
-      Updated at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_note.updated_at) %> ago
-    </dd>
-  </dl>
-</article>
+<p><strong>Date:</strong> <%= @the_note.date %></p>
 
 <hr>
 
+<h2>Edit note</h2>
 
-<article>
-  <header>
-    <h2>
-      Edit note
-    </h2>
-  </header>
+<form action="/modify_note/<%= @the_note.id %>" method="post">
+  <div>
+    <textarea name="query_body" rows="10" style="width: 100%; max-width: 700px;"><%= @the_note.body %></textarea>
+  </div>
 
-  <form action="/modify_note/<%= @the_note.id %>"  method="post" >
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
+  <button type="submit">Update note</button>
+</form>
 
-      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_note.user_id %>">
-    </div>
-
-    <div>
-      <label for="title_box">
-        Title
-      </label>
-
-      <input type="text" id="title_box" name="query_title" value="<%= @the_note.title %>">
-    </div>
-
-    <div>
-      <label for="body_box">
-        Body
-      </label>
-
-      <input type="text" id="body_box" name="query_body" value="<%= @the_note.body %>">
-    </div>
-
-    <div>
-      <label for="day_entry_id_box">
-        Day entry
-      </label>
-
-      <input type="text" id="day_entry_id_box" name="query_day_entry_id" value="<%= @the_note.day_entry_id %>">
-    </div>
-
-    <button type="submit">
-      Update note
-    </button>
-  </form>
-</article>
-
-<hr>
+<div style="margin-top: 10px;">
+  <a href="/delete_note/<%= @the_note.id %>">Delete note</a>
+</div>

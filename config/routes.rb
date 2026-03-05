@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
 
   get("/", { :controller => "calendar", :action => "index"})
   get("/calendar", { :controller => "calendar", :action => "index"})
@@ -21,7 +22,14 @@ Rails.application.routes.draw do
   get("/delete_habit/:path_id", { :controller => "habits", :action => "destroy" })
   post("/toggle_habit_check", { :controller => "habit_checks", :action => "toggle" })
 
-  # Routes for the Day entry resource:
+  # notes
+
+  post("/insert_note", { :controller => "notes", :action => "create" })
+  get("/notes", { :controller => "notes", :action => "index" })
+  get("/notes/:path_id", { :controller => "notes", :action => "show" })
+  post("/modify_note/:path_id", { :controller => "notes", :action => "update" })
+  get("/delete_note/:path_id", { :controller => "notes", :action => "destroy" })
+
 
   # CREATE
   post("/insert_day_entry", { :controller => "day_entries", :action => "create" })

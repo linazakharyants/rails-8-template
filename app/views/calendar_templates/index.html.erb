@@ -1,37 +1,113 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
+<style>
+  .page-wrap {
+    display: flex;
+    gap: 18px;
+    align-items: stretch; /* sidebar matches calendar height */
+    max-width: 1200px;
+  }
+
+  .calendar-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .notes-col {
+  width: 170px; /* was 260px — now ~2/3 */
+  display: flex;
+}
+
+  .notes-card {
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 14px 14px 10px 14px;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .notes-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .notebook-lines {
+    border-radius: 10px;
+    padding: 10px 10px;
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.08),
+        rgba(0,0,0,0.08) 1px,
+        transparent 1px,
+        transparent 22px
+      );
+    min-height: 320px;
+  }
+
+  .notes-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+  }
+
+  /* Make the banners align with the calendar column width */
+  .top-banner {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 10px 0 14px 0;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 1000px) {
+    .page-wrap { flex-direction: column; }
+    .notes-col { width: 100%; }
+    .notebook-lines { min-height: 180px; }
+  }
+</style>
+
 <h1>Calendar</h1>
 
-<!-- Line of the Day Banner -->
-<div style="
-  max-width: 1000px;
-  padding: 12px 14px;
-  margin: 10px 0 14px 0;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font-size: 14px;
-">
-  <a href="/highlights/<%= Date.today %>" style="text-decoration:none; color:inherit;">
-    <strong>Line of the day</strong>
-  </a>
-</div>
+<div class="page-wrap">
+  <!-- LEFT: calendar column -->
+  <div class="calendar-col">
 
-<!-- Habits Banner -->
-<div style="
-  max-width: 1000px;
-  padding: 12px 14px;
-  margin: 10px 0 14px 0;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font-size: 14px;
-">
-  <a href="/habits" style="text-decoration:none; color:inherit;">
-    <strong>Habit Tracker</strong>
-  </a>
-</div>
+    <!-- Line of the Day Banner -->
+    <div class="top-banner">
+      <a href="/highlights/<%= Date.today %>" style="text-decoration:none; color:inherit;">
+        <strong>Line of the day</strong>
+      </a>
+    </div>
 
-<div id="calendar" style="max-width: 1000px;"></div>
+    <!-- Habits Banner -->
+    <div class="top-banner">
+      <a href="/habits" style="text-decoration:none; color:inherit;">
+        <strong>Habit Tracker</strong>
+      </a>
+    </div>
+
+    <div id="calendar"></div>
+  </div>
+
+  <!-- RIGHT: notes notebook panel -->
+  <div class="notes-col">
+    <a class="notes-card" href="/notes">
+      <div class="notes-title">Notes</div>
+      <div class="notebook-lines"></div>
+      <div class="notes-hint">Open notebook →</div>
+    </a>
+  </div>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -61,9 +137,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     eventContent: function(info) {
       var title = info.event.title;
-
       return {
-        html: "<div style='font-size:12px; font-weight:bold;'>" + escapeHtml(truncate(title, 22)) + "</div>"
+        html: "<div style='font-size:12px; font-weight:bold;'>" +
+              escapeHtml(truncate(title, 22)) +
+              "</div>"
       };
     },
 

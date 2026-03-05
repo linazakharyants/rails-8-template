@@ -1,67 +1,37 @@
-<h1>
-  List of all notes
-</h1>
+<h1>Notes</h1>
+
+<div style="margin: 10px 0;">
+  <a href="/">Back to calendar</a>
+</div>
 
 <hr>
 
-<article>
-  <header>
-    <h2>
-      Add a new note
-    </h2>
-  </header>
+<h2>Add a note</h2>
 
-  <form action="/insert_note" method="post">
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
+<form action="/insert_note" method="post">
+  <%# Optional: if you're on /notes?date=YYYY-MM-DD this will use that date %>
+  <% if @selected_date.present? %>
+    <input type="hidden" name="query_date" value="<%= @selected_date %>">
+    <p>Date: <%= @selected_date %></p>
+  <% end %>
 
-      <input type="text" id="user_id_box" name="query_user_id">
-    </div>
+  <div>
+    <label for="body_box">Note</label><br>
+    <textarea id="body_box" name="query_body" rows="6" style="width: 100%; max-width: 700px;"></textarea>
+  </div>
 
-    <div>
-      <label for="title_box">
-        Title
-      </label>
+  <button type="submit">Save note</button>
+</form>
 
-      <input type="text" id="title_box" name="query_title">
-    </div>
-
-    <div>
-      <label for="body_box">
-        Body
-      </label>
-
-      <input type="text" id="body_box" name="query_body">
-    </div>
-
-    <div>
-      <label for="day_entry_id_box">
-        Day entry
-      </label>
-
-      <input type="text" id="day_entry_id_box" name="query_day_entry_id">
-    </div>
-
-    <button type="submit">
-      Create note
-    </button>
-  </form>
-</article>
-
-<hr>
-
-<article>
-  <ul>
-    <% @list_of_notes.each do |a_note| %>
-      <li>
-        <a href="/notes/<%= a_note.id %>">
-          Note #<%= a_note.id %>
-        </a>
-      </li>
-    <% end %>
-  </ul>
-</article>
-
-<hr>
+<ul>
+  <% @list_of_notes.each do |n| %>
+    <li>
+      <a href="/notes/<%= n.id %>">
+        <%= n.body.to_s.truncate(60) %>
+      </a>
+      <% if n.date.present? %>
+        <span style="color:#777;">(<%= n.date %>)</span>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
