@@ -22,13 +22,24 @@ Rails.application.routes.draw do
   get("/delete_habit/:path_id", { :controller => "habits", :action => "destroy" })
   post("/toggle_habit_check", { :controller => "habit_checks", :action => "toggle" })
 
-  # notes
-
+  #notes
   post("/insert_note", { :controller => "notes", :action => "create" })
   get("/notes", { :controller => "notes", :action => "index" })
   get("/notes/:path_id", { :controller => "notes", :action => "show" })
   post("/modify_note/:path_id", { :controller => "notes", :action => "update" })
   get("/delete_note/:path_id", { :controller => "notes", :action => "destroy" })
+
+ #profile
+ get("/profile", { :controller => "profiles", :action => "edit" })
+ post("/profile", { :controller => "profiles", :action => "update" })
+
+
+
+
+
+
+
+
 
 
   # CREATE

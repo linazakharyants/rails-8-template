@@ -1,0 +1,31 @@
+<h1>Your profile</h1>
+
+<div style="margin: 10px 0;">
+  <a href="/">Back to calendar</a>
+</div>
+
+<hr>
+
+<% if @the_user&.avatar&.present? %>
+   <img src="<%= @the_user.avatar %>" style="width:90px; height:90px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+<% else %>
+  <div style="width:90px; height:90px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center;">
+    No photo
+  </div>
+<% end %>
+
+<hr>
+
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <div style="margin-bottom: 10px;">
+    <label for="name_box"><strong>Username</strong></label><br>
+    <input id="name_box" type="text" name="query_name" value="<%= @the_user.name %>" style="width: 320px;">
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <label for="avatar_box"><strong>Profile picture</strong></label><br>
+    <input id="avatar_box" type="file" name="query_avatar">
+  </div>
+
+  <button type="submit">Save profile</button>
+</form>

@@ -20,39 +20,34 @@
 
   <body>
 
-    <div style="max-width:1200px; margin:0 auto; padding:10px 0; display:flex; justify-content:flex-end; align-items:center; gap:12px;">
-
+<div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; padding:12px 16px;">
   <% if user_signed_in? %>
 
-    <div style="display:flex; align-items:center; gap:10px;">
-
+    <a href="/profile" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
       <% if current_user.avatar.present? %>
         <img src="<%= current_user.avatar %>"
-             style="width:34px; height:34px; border-radius:50%; object-fit:cover;">
+             style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
       <% else %>
-        <div style="width:34px; height:34px; border-radius:50%; background:#ddd;"></div>
+        <div style="width:40px; height:40px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center;">
+          <%= (current_user.name.presence || current_user.email).to_s.first.upcase %>
+        </div>
       <% end %>
 
-      <span style="font-size:14px;">
-        <%= current_user.name || current_user.email %>
-      </span>
+      <strong><%= current_user.name.presence || "User" %></strong>
+    </a>
 
-      <%= link_to "Logout", destroy_user_session_path, method: :delete %>
-
-    </div>
+    <%= button_to "Log out", destroy_user_session_path, method: :delete,
+          style: "border:1px solid #ddd; padding:8px 14px; border-radius:12px; background:white; cursor:pointer;" %>
 
   <% else %>
-
-    <div style="font-size:14px;">
-      <%= link_to "Login", new_user_session_path %> |
-      <%= link_to "Sign up", new_user_registration_path %>
+    <div style="display:flex; gap:10px;">
+      <a href="<%= new_user_session_path %>">Log in</a>
+      <a href="<%= new_user_registration_path %>">Sign up</a>
     </div>
-
   <% end %>
-
 </div>
 
-    <%= yield %>
+<%= yield %>
 
   </body>
 </html>
