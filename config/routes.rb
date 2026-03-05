@@ -11,14 +11,15 @@ Rails.application.routes.draw do
   get("/frames/:path_id", { :controller => "day_entries", :action => "edit_frame" })
   post("/modify_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })
 
-
   post("/insert_habit", { :controller => "habits", :action => "create" })
   get("/habits", { :controller => "habits", :action => "index" })
+  post("/toggle_habit/:habit_id", { :controller => "habit_checks", :action => "toggle" })
   
   get("/habits/:path_id", { :controller => "habits", :action => "show" })
   get("/habits_manage", { :controller => "habits", :action => "manage" })
   post("/modify_habit/:path_id", { :controller => "habits", :action => "update" })
   get("/delete_habit/:path_id", { :controller => "habits", :action => "destroy" })
+  post("/toggle_habit_check", { :controller => "habit_checks", :action => "toggle" })
 
   # Routes for the Day entry resource:
 

@@ -1,28 +1,67 @@
-<div style="margin: 10px 0;">
-  <a href="/habits_manage" class="manage-link">Add / Update Habits</a>
-</div>
+<h1>Habit Tracker</h1>
 
+<div style="margin: 10px 0;">
+  <a href="/habits_manage">Add / Update Habits</a>
+</div>
+ <div>
+    <a href="/">Back to calendar</a>
+  </div>
+  
 <style>
-.manage-link {
-  display: inline-block;
-  font-size: 12px;
-  margin-top: 4px;
-}
+  .grid { border-collapse: collapse; }
+  .grid th, .grid td { padding: 4px; text-align: center; }
+  .habit-name { text-align: left; padding-right: 10px; white-space: nowrap; }
+  .cell { width: 16px; height: 16px; border: 1px solid #ddd; border-radius: 4px; display:inline-block; }
+  .on  { background: #222; }   /* completed */
+  .off { background: #fff; }   /* not completed */
+
+  .dow { font-size: 10px; color: #777; line-height: 1.1; }
+  .dom { font-size: 10px; color: #aaa; line-height: 1.1; }
 </style>
 
-  <ul>
-    <% @list_of_habits.each do |a_habit| %>
-      <li>
-        <a href="/habits/<%= a_habit.id %>">
-          <%= a_habit.name %>
-        </a>
+<% if @list_of_habits.empty? %>
+  <p>No habits yet. <a href="/habits_manage">Add a habit to track</a></p>
+<% else %>
+  <table class="grid">
+    <thead>
+      <tr>
+        <th></th>
 
-        <% if a_habit.description.present? %>
-          — <%= a_habit.description %>
+        <% @dates.each do |d| %>
+          <th>
+            <div class="dow"><%= d.strftime("%a") %></div>
+            <div class="dom"><%= d.strftime("%d") %></div>
+          </th>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
-</article>
 
-<hr>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @list_of_habits.each do |h| %>
+        <tr>
+          <td class="habit-name">
+            <a href="/habits/<%= h.id %>"><%= h.name %></a>
+          </td>
+
+          <% @dates.each do |d| %>
+            <% key = "#{h.id}-#{d}" %>
+            <% done = @checks_by_key[key] == true %>
+
+            <td>
+              <form action="/toggle_habit_check" method="post" style="display:inline;">
+                <input type="hidden" name="habit_id" value="<%= h.id %>">
+                <input type="hidden" name="date" value="<%= d %>">
+                <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
+
+                <button type="submit" style="border:none; padding:0; background:transparent; cursor:pointer;">
+                  <span class="cell <%= done ? "on" : "off" %>"></span>
+                </button>
+              </form>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

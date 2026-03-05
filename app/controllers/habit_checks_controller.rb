@@ -16,6 +16,45 @@ class HabitChecksController < ApplicationController
 
     render({ :template => "habit_check_templates/show" })
   end
+  
+  def toggle
+  habit_id = params.fetch("habit_id")
+  user_id = 1
+
+  # Use the date from the grid column
+  date = Date.parse(params.fetch("date"))
+
+  # Find or create DayEntry for that date
+  day_entry = DayEntry.where({ :date => date, :user_id => user_id }).first
+
+  if day_entry.nil?
+    day_entry = DayEntry.new
+    day_entry.user_id = user_id
+    day_entry.date = date
+    day_entry.highlight_of_the_day = ""
+    day_entry.save
+  end
+
+  # Find existing habit check for this habit + that day
+  habit_check = HabitCheck.where({
+    :habit_id => habit_id,
+    :day_entry_id => day_entry.id,
+    :user_id => user_id
+  }).first
+
+  if habit_check.nil?
+    habit_check = HabitCheck.new
+    habit_check.user_id = user_id
+    habit_check.habit_id = habit_id
+    habit_check.day_entry_id = day_entry.id
+  end
+
+  # Set to what the form asked for (more reliable than flip)
+  habit_check.completed = (params.fetch("completed") == "true")
+
+  habit_check.save
+redirect_back(fallback_location: "/habits")
+end
 
   def create
     the_habit_check = HabitCheck.new

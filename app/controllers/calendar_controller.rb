@@ -21,7 +21,7 @@ class CalendarController < ApplicationController
         render :json => scoped.map { |e|
           {
             :id => e.id,
-            :title => (e.highlight_of_the_day.presence || "Day entry"),
+            :title => e.highlight_of_the_day,
             :start => e.date,
             :allDay => true,
             :extendedProps => {
@@ -33,4 +33,3 @@ class CalendarController < ApplicationController
     end
   end
 end
-

@@ -4,6 +4,7 @@
 #
 #  id           :bigint           not null, primary key
 #  completed    :boolean
+#  date         :date
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  day_entry_id :integer
