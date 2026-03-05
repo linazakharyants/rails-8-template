@@ -23,13 +23,13 @@ class HabitChecksController < ApplicationController
 
   date = Date.parse(params.fetch("date"))
 
-  # Block future days
-  if date > Date.today
+  # Block future days (timezone-safe)
+  if date > Date.current
     redirect_back(fallback_location: "/habits")
     return
   end
 
-  # Find or create DayEntry for that date (because HabitCheck uses day_entry_id)
+  # Find or create DayEntry for that date (HabitCheck uses day_entry_id)
   day_entry = DayEntry.where({ :date => date, :user_id => user_id }).first
 
   if day_entry.nil?
@@ -40,7 +40,6 @@ class HabitChecksController < ApplicationController
     day_entry.save
   end
 
-  # Find existing habit check for this habit + that day_entry
   habit_check = HabitCheck.where({
     :habit_id => habit_id,
     :day_entry_id => day_entry.id,
@@ -54,7 +53,6 @@ class HabitChecksController < ApplicationController
     habit_check.day_entry_id = day_entry.id
   end
 
-  # Set based on the form
   habit_check.completed = (params.fetch("completed") == "true")
   habit_check.save
 

@@ -2,8 +2,8 @@ class HabitsController < ApplicationController
   def index
   user_id = 1
 
-  today = Date.current
-  @start_date = today.beginning_of_week(:monday)
+  @today = Date.current
+  @start_date = @today.beginning_of_week(:monday)
   @end_date = @start_date + 6
   @dates = (@start_date..@end_date).to_a
 
@@ -37,7 +37,7 @@ class HabitsController < ApplicationController
     @checks_by_key["#{c.habit_id}-#{date}"] = (c.completed == true)
   end
 
-  # Weekly % progress
+  # Weekly % progress (optional, you can display it if you want)
   if habits_count > 0
     completed_checks = checks.where({ :completed => true }).count
     total_possible = habits_count * 7

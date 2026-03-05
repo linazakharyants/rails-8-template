@@ -13,11 +13,17 @@
   .grid th, .grid td { padding: 4px; text-align: center; }
   .habit-name { text-align: left; padding-right: 10px; white-space: nowrap; }
   .cell { width: 16px; height: 16px; border: 1px solid #ddd; border-radius: 4px; display:inline-block; }
-  .on  { background: #222; }   /* completed */
-  .off { background: #fff; }   /* not completed */
+  .on  { background: #222; }
+  .off { background: #fff; }
 
   .dow { font-size: 10px; color: #777; line-height: 1.1; }
   .dom { font-size: 10px; color: #aaa; line-height: 1.1; }
+
+  .future-cell {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 </style>
 
 <% if @list_of_habits.empty? %>
@@ -50,7 +56,7 @@
             <% done = @checks_by_key[key] == true %>
 
             <td>
-              <% if d <= Date.today %>
+              <% if d <= @today %>
                 <form action="/toggle_habit_check" method="post" style="display:inline;">
                   <input type="hidden" name="habit_id" value="<%= h.id %>">
                   <input type="hidden" name="date" value="<%= d %>">
@@ -61,7 +67,7 @@
                   </button>
                 </form>
               <% else %>
-                <span class="cell off" style="opacity:0.3;"></span>
+                <span class="cell off future-cell"></span>
               <% end %>
             </td>
           <% end %>
