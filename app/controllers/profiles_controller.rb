@@ -7,16 +7,17 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    the_user = current_user
+  the_user = current_user
+  the_user.name = params[:query_name]
 
-    the_user.name = params.fetch("query_name", "")
-    the_user.avatar = params.fetch("query_avatar", "")
-
-    if the_user.valid?
-      the_user.save
-      redirect_to("/profile", { :notice => "Profile updated." })
-    else
-      redirect_to("/profile", { :alert => the_user.errors.full_messages.to_sentence })
-    end
+  if params[:query_avatar].present?
+    the_user.avatar.attach(params[:query_avatar])
   end
+
+  if the_user.save
+    redirect_to "/profile", notice: "Profile updated."
+  else
+    redirect_to "/profile", alert: the_user.errors.full_messages.to_sentence
+  end
+end
 end

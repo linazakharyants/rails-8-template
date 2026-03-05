@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
-#  avatar                 :string
+#  avatar_url             :string
 #  bio                    :string
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
@@ -28,5 +28,5 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   #devise :database_authenticatable, :registerable,
          #:recoverable, :rememberable, :validatable
- 
+   has_one_attached :avatar
 end

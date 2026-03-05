@@ -23,18 +23,22 @@
 <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; padding:12px 16px;">
   <% if user_signed_in? %>
 
-    <a href="/profile" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
-      <% if current_user.avatar.present? %>
-        <img src="<%= current_user.avatar %>"
-             style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+    <div style="display:flex; align-items:center; gap:10px;">
+
+      <% if current_user.avatar.attached? %>
+        <%= image_tag current_user.avatar,
+              style: "width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #ddd; display:block;" %>
       <% else %>
         <div style="width:40px; height:40px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center;">
           <%= (current_user.name.presence || current_user.email).to_s.first.upcase %>
         </div>
       <% end %>
 
-      <strong><%= current_user.name.presence || "User" %></strong>
-    </a>
+      <a href="/profile" style="text-decoration:none; color:inherit;">
+        <strong><%= current_user.name.presence || "User" %></strong>
+      </a>
+
+    </div>
 
     <%= button_to "Log out", destroy_user_session_path, method: :delete,
           style: "border:1px solid #ddd; padding:8px 14px; border-radius:12px; background:white; cursor:pointer;" %>

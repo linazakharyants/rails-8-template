@@ -7,14 +7,14 @@
 <hr>
 
 <% if @the_user&.avatar&.present? %>
-   <img src="<%= @the_user.avatar %>" style="width:90px; height:90px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+   <%= image_tag url_for(@the_user.avatar),
+      style: "width:90px; height:90px; border-radius:50%; object-fit:cover; border:1px solid #ddd;" %>
 <% else %>
   <div style="width:90px; height:90px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center;">
     No photo
   </div>
 <% end %>
 
-<hr>
 
 <form action="/profile" method="post" enctype="multipart/form-data">
   <div style="margin-bottom: 10px;">
