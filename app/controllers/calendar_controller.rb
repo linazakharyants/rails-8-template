@@ -21,10 +21,15 @@ class CalendarController < ApplicationController
         habits_count = Habit.count
 
         # day_entry_id => number of completed habit checks for that day_entry
-        completed_by_day_entry = HabitCheck.where({
-          :user_id => user_id,
-          :completed => true
-        }).group(:day_entry_id).count
+       user_id = 1
+habit_ids = Habit.pluck(:id)
+habits_count = habit_ids.length
+
+completed_by_day_entry = HabitCheck.where({
+  :user_id => user_id,
+  :completed => true,
+  :habit_id => habit_ids
+}).group(:day_entry_id).count
 
         render :json => scoped.map { |e|
           completed = completed_by_day_entry[e.id].to_i
