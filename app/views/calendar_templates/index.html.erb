@@ -69,18 +69,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
     eventDidMount: function(info) {
 
-      var photo = info.event.extendedProps.photo;
-
-      if (!photo) return;
-
       var dayCell = info.el.closest(".fc-daygrid-day");
-
       if (!dayCell) return;
+
+      // --- Insert Habit % between the highlight and the frame link ---
+      var pct = info.event.extendedProps.habit_percent;
+
+      if (pct !== null && pct !== undefined && !dayCell.querySelector(".habit-percent")) {
+        var pctDiv = document.createElement("div");
+        pctDiv.className = "habit-percent";
+        pctDiv.innerText = "Habits: " + pct + "%";
+        pctDiv.style.marginTop = "4px";
+        pctDiv.style.fontSize = "12px";
+        pctDiv.style.color = "#555";
+
+        var frameArea = dayCell.querySelector(".fc-daygrid-day-frame");
+        if (frameArea) frameArea.appendChild(pctDiv);
+      }
+
+      // --- Frame of the Day link (only if a photo exists) ---
+      var photo = info.event.extendedProps.photo;
+      if (!photo) return;
 
       if (dayCell.querySelector(".frame-link")) return;
 
       var link = document.createElement("a");
-
       link.href = "/frames/" + info.event.id;
       link.innerText = "Frame of the Day";
       link.className = "frame-link";
@@ -96,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
 
       var frame = dayCell.querySelector(".fc-daygrid-day-frame");
-
       if (frame) frame.appendChild(link);
     },
 

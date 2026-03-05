@@ -21,10 +21,15 @@ class HabitChecksController < ApplicationController
   habit_id = params.fetch("habit_id")
   user_id = 1
 
-  # Use the date from the grid column
   date = Date.parse(params.fetch("date"))
 
-  # Find or create DayEntry for that date
+  # Block future days
+  if date > Date.today
+    redirect_back(fallback_location: "/habits")
+    return
+  end
+
+  # Find or create DayEntry for that date (because HabitCheck uses day_entry_id)
   day_entry = DayEntry.where({ :date => date, :user_id => user_id }).first
 
   if day_entry.nil?
@@ -35,7 +40,7 @@ class HabitChecksController < ApplicationController
     day_entry.save
   end
 
-  # Find existing habit check for this habit + that day
+  # Find existing habit check for this habit + that day_entry
   habit_check = HabitCheck.where({
     :habit_id => habit_id,
     :day_entry_id => day_entry.id,
@@ -49,11 +54,11 @@ class HabitChecksController < ApplicationController
     habit_check.day_entry_id = day_entry.id
   end
 
-  # Set to what the form asked for (more reliable than flip)
+  # Set based on the form
   habit_check.completed = (params.fetch("completed") == "true")
-
   habit_check.save
-redirect_back(fallback_location: "/habits")
+
+  redirect_back(fallback_location: "/habits")
 end
 
   def create

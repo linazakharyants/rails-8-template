@@ -3,10 +3,11 @@
 <div style="margin: 10px 0;">
   <a href="/habits_manage">Add / Update Habits</a>
 </div>
- <div>
-    <a href="/">Back to calendar</a>
-  </div>
-  
+
+<div style="margin: 10px 0;">
+  <a href="/">Back to calendar</a>
+</div>
+
 <style>
   .grid { border-collapse: collapse; }
   .grid th, .grid td { padding: 4px; text-align: center; }
@@ -49,17 +50,22 @@
             <% done = @checks_by_key[key] == true %>
 
             <td>
-              <form action="/toggle_habit_check" method="post" style="display:inline;">
-                <input type="hidden" name="habit_id" value="<%= h.id %>">
-                <input type="hidden" name="date" value="<%= d %>">
-                <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
+              <% if d <= Date.today %>
+                <form action="/toggle_habit_check" method="post" style="display:inline;">
+                  <input type="hidden" name="habit_id" value="<%= h.id %>">
+                  <input type="hidden" name="date" value="<%= d %>">
+                  <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
 
-                <button type="submit" style="border:none; padding:0; background:transparent; cursor:pointer;">
-                  <span class="cell <%= done ? "on" : "off" %>"></span>
-                </button>
-              </form>
+                  <button type="submit" style="border:none; padding:0; background:transparent; cursor:pointer;">
+                    <span class="cell <%= done ? "on" : "off" %>"></span>
+                  </button>
+                </form>
+              <% else %>
+                <span class="cell off" style="opacity:0.3;"></span>
+              <% end %>
             </td>
           <% end %>
+
         </tr>
       <% end %>
     </tbody>

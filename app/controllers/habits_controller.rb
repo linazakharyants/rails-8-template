@@ -2,7 +2,7 @@ class HabitsController < ApplicationController
   def index
   user_id = 1
 
-  today = Date.today
+  today = Date.current
   @start_date = today.beginning_of_week(:monday)
   @end_date = @start_date + 6
   @dates = (@start_date..@end_date).to_a
