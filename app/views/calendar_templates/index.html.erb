@@ -60,60 +60,121 @@
 
   .top-banner {
     width: 100%;
+    margin: 10px 0 22px 0;
     padding: 12px 14px;
-    margin: 10px 0 14px 0;
     border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 14px;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
     box-sizing: border-box;
   }
 
-  /* Highlight box styling */
+  .top-banner a {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: #f4f0ff;
+    border: 1px solid #e2dbff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #3f3f46;
+    transition: all 0.18s ease;
+  }
+
+  .top-banner a:hover {
+    background: #ebe5ff;
+    border-color: #d6ccff;
+  }
+
+  .top-banner a.active {
+    background: #6b5cff;
+    border-color: #6b5cff;
+    color: white;
+  }
+
   .highlight-pill {
     font-size: 12px;
     font-weight: 600;
     line-height: 1.25;
-    padding: 4px 6px;
-    border-radius: 6px;
+    padding: 4px 8px;
+    border-radius: 8px;
     background: #ffd6e7;
+    border: 1px solid #f2abc8;
     color: #7a0f3b;
-
     white-space: normal;
     word-break: break-word;
     overflow: hidden;
-
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
 
+  .habit-pill {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #dff7e6;
+    border: 1px solid #b8e7c5;
+    color: #246b3c;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .frame-pill {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #dceeff;
+    border: 1px solid #b9d8f8;
+    color: #215a9a;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .frame-pill:hover {
+    background: #d2e8ff;
+    text-decoration: none;
+    color: #215a9a;
+  }
+
   @media (max-width: 1000px) {
-    .page-wrap { flex-direction: column; }
-    .notes-col { width: 100%; }
-    .notebook-lines { min-height: 180px; }
+    .page-wrap {
+      flex-direction: column;
+    }
+
+    .notes-col {
+      width: 100%;
+    }
+
+    .notebook-lines {
+      min-height: 180px;
+    }
   }
 </style>
 
 <h1>Calendar</h1>
 
 <div class="page-wrap">
-
   <div class="calendar-col">
 
     <div class="top-banner">
-      <a href="/highlights/<%= Date.today %>" style="text-decoration:none; color:inherit;">
-        <strong>Line of the day</strong>
-      </a>
-    </div>
-
-    <div class="top-banner">
-      <a href="/habits" style="text-decoration:none; color:inherit;">
-        <strong>Habit Tracker</strong>
-      </a>
+      <a href="/highlights/<%= Date.today %>" id="nav-highlight">Line of the Day</a>
+      <a href="/highlights/<%= Date.today %>" id="nav-frame">Frame of the Day</a>
+      <a href="/habits" id="nav-habits">Habit Tracker</a>
     </div>
 
     <div id="calendar"></div>
-
   </div>
 
   <div class="notes-col">
@@ -123,7 +184,6 @@
       <div class="notes-hint">Open notebook →</div>
     </a>
   </div>
-
 </div>
 
 <script>
@@ -138,18 +198,24 @@ document.addEventListener("DOMContentLoaded", function() {
       .replaceAll("'", "&#039;");
   }
 
+  var path = window.location.pathname;
+
+  if (path.includes("highlight")) {
+    document.getElementById("nav-highlight")?.classList.add("active");
+  } else if (path.includes("frame")) {
+    document.getElementById("nav-frame")?.classList.add("active");
+  } else if (path.includes("habit")) {
+    document.getElementById("nav-habits")?.classList.add("active");
+  }
+
   var calendarElement = document.getElementById("calendar");
 
   var calendar = new FullCalendar.Calendar(calendarElement, {
-
     initialView: "dayGridMonth",
-
     events: "/calendar.json",
 
     eventContent: function(info) {
-
       var title = info.event.title || "";
-
       return {
         html:
           "<div class='highlight-pill'>" +
@@ -159,38 +225,30 @@ document.addEventListener("DOMContentLoaded", function() {
     },
 
     eventDidMount: function(info) {
-
       var dayCell = info.el.closest(".fc-daygrid-day");
       if (!dayCell) return;
 
+      var frameArea = dayCell.querySelector(".fc-daygrid-day-frame");
+      if (!frameArea) return;
+
       var pct = info.event.extendedProps.habit_percent;
 
-      if (pct !== null && pct !== undefined && !dayCell.querySelector(".habit-percent")) {
-
+      if (pct !== null && pct !== undefined && !dayCell.querySelector(".habit-pill")) {
         var pctDiv = document.createElement("div");
-        pctDiv.className = "habit-percent";
-        pctDiv.innerText = "Habits: " + pct + "%";
-        pctDiv.style.marginTop = "4px";
-        pctDiv.style.fontSize = "12px";
-        pctDiv.style.color = "#555";
-
-        var frameArea = dayCell.querySelector(".fc-daygrid-day-frame");
-        if (frameArea) frameArea.appendChild(pctDiv);
+        pctDiv.className = "habit-pill";
+        pctDiv.innerText = "Habits " + pct + "%";
+        frameArea.appendChild(pctDiv);
       }
 
       var photo = info.event.extendedProps.photo;
       if (!photo) return;
 
-      if (dayCell.querySelector(".frame-link")) return;
+      if (dayCell.querySelector(".frame-pill")) return;
 
       var link = document.createElement("a");
       link.href = "/frames/" + info.event.id;
       link.innerText = "Frame of the Day";
-      link.className = "frame-link";
-
-      link.style.display = "block";
-      link.style.marginTop = "4px";
-      link.style.fontSize = "12px";
+      link.className = "frame-pill";
 
       link.addEventListener("click", function(e) {
         e.preventDefault();
@@ -198,8 +256,7 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = link.href;
       });
 
-      var frame = dayCell.querySelector(".fc-daygrid-day-frame");
-      if (frame) frame.appendChild(link);
+      frameArea.appendChild(link);
     },
 
     eventClick: function(info) {
@@ -207,10 +264,8 @@ document.addEventListener("DOMContentLoaded", function() {
       info.jsEvent.stopPropagation();
       window.location.href = "/highlights/" + info.event.startStr;
     }
-
   });
 
   calendar.render();
-
 });
 </script>
