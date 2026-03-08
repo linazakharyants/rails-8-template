@@ -1,54 +1,122 @@
-<h1>
-   Add a habit to track
-</h1>
+<style>
+  .manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-<article>
-  <div>
-    <a href="/habits">Back to tracker</a>
+  .manage-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .manage-card {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background: #fff;
+    padding: 22px;
+    margin-top: 16px;
+  }
+
+  .manage-form .form-row {
+    margin-bottom: 16px;
+  }
+
+  .manage-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .manage-form input[type="text"] {
+    width: 100%;
+    max-width: 520px;
+    padding: 10px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .habit-row {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s ease;
+  }
+
+  .habit-row:hover {
+    background: #f8f7ff;
+    border-color: #dcd7ff;
+  }
+
+  .habit-row-title {
+    font-weight: 600;
+    color: #2f2f35;
+  }
+
+  .habit-row-description {
+    color: #777;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+</style>
+
+<div class="manage-header">
+  <h1 class="mb-0">Add a Habit to Track</h1>
+
+  <div class="manage-actions">
+    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to tracker</a>
+    <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
   </div>
+</div>
 
-   <div>
-    <a href="/">Back to calendar</a>
-  </div>
-  
-</article>
+<div class="manage-card">
+  <h2 class="h4 mb-3">New habit</h2>
 
-<hr>
+  <form action="/insert_habit" method="post" class="manage-form">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-<article>
-
-  <form action="/insert_habit" method="post">
-    <div>
+    <div class="form-row">
       <label for="name_box">Habit name</label>
       <input type="text" id="name_box" name="query_name" placeholder="e.g. Gym, Read, No binge">
     </div>
 
-    <div>
+    <div class="form-row">
       <label for="description_box">Description (optional)</label>
       <input type="text" id="description_box" name="query_description">
     </div>
 
-    <button type="submit">Add habit</button>
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Add habit</button>
   </form>
-</article>
+</div>
 
-<hr>
+<div class="manage-card">
+  <h2 class="h4 mb-3">Your habits</h2>
 
-<article>
-  <header>
-    <h2>Your habits</h2>
-  </header>
-
-  <ul>
+  <div class="habit-list">
     <% @list_of_habits.each do |a_habit| %>
-      <li>
-        <a href="/habits/<%= a_habit.id %>"><%= a_habit.name %></a>
-        <% if a_habit.description.present? %>
-          — <%= a_habit.description %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-</article>
+      <a href="/habits/<%= a_habit.id %>" class="habit-row">
+        <div class="habit-row-title"><%= a_habit.name %></div>
 
-<hr>
+        <% if a_habit.description.present? %>
+          <div class="habit-row-description"><%= a_habit.description %></div>
+        <% end %>
+      </a>
+    <% end %>
+  </div>
+</div>

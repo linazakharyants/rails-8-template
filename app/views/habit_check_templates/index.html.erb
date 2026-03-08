@@ -1,67 +1,220 @@
-<h1>
-  List of all habit checks
-</h1>
+<style>
+  .habits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-<hr>
+  .habits-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 
-<article>
-  <header>
-    <h2>
-      Add a new habit check
-    </h2>
-  </header>
+  .tracker-card {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background: #fff;
+    padding: 22px;
+    margin-top: 12px;
+  }
 
-  <form action="/insert_habit_check" method="post">
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
+  .tracker-inner {
+    display: inline-block;
+    min-width: fit-content;
+  }
 
-      <input type="text" id="user_id_box" name="query_user_id">
+  .tracker-header,
+  .tracker-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tracker-header {
+    margin-bottom: 14px;
+  }
+
+  .tracker-row {
+    margin-bottom: 12px;
+  }
+
+  .tracker-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .tracker-label-spacer {
+    width: 150px;
+    flex-shrink: 0;
+  }
+
+  .tracker-day-chip {
+    width: 42px;
+    min-width: 42px;
+    padding: 6px 0 5px;
+    text-align: center;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    background: #fafafa;
+    line-height: 1.1;
+  }
+
+  .tracker-day-chip .dow {
+    font-size: 10px;
+    font-weight: 700;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .tracker-day-chip .dom {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: #9a9a9a;
+    font-weight: 600;
+  }
+
+  .habit-label {
+    width: 150px;
+    min-width: 150px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #2f2f35;
+    line-height: 1.3;
+  }
+
+  .habit-label:hover {
+    text-decoration: underline;
+  }
+
+  .tracker-cell-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  .cell {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #d8d8d8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.15s ease;
+  }
+
+  .cell.off {
+    background: #f4f0ff;
+    border-color: #ddd5ff;
+  }
+
+  .cell.off:hover {
+    background: #ebe5ff;
+    border-color: #cfc2ff;
+    box-shadow: 0 4px 10px rgba(107, 92, 255, 0.12);
+  }
+
+  .cell.on {
+    background: #dff7e6;
+    border-color: #b8e7c5;
+    color: #246b3c;
+    box-shadow: 0 4px 10px rgba(36, 107, 60, 0.12);
+  }
+
+  .cell.on::after {
+    content: "✓";
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .future-cell {
+    opacity: 0.35;
+    pointer-events: none;
+    background: #f7f7f7;
+    border-color: #e6e6e6;
+    box-shadow: none;
+  }
+
+  .empty-habits {
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .tracker-card {
+      overflow-x: auto;
+    }
+  }
+</style>
+
+<div class="habits-header">
+  <h1 class="mb-0">Habit Tracker</h1>
+
+  <div class="habits-actions">
+    <a href="/habits_manage" class="btn btn-dark rounded-pill px-3">Add / Update Habits</a>
+    <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
+  </div>
+</div>
+
+<% if @list_of_habits.empty? %>
+  <div class="empty-habits">
+    <p class="mb-0">No habits yet. <a href="/habits_manage">Add a habit to track</a>.</p>
+  </div>
+<% else %>
+  <div class="tracker-card">
+    <div class="tracker-inner">
+
+      <div class="tracker-header">
+        <div class="tracker-label-spacer"></div>
+
+        <% @dates.each do |d| %>
+          <div class="tracker-day-chip">
+            <div class="dow"><%= d.strftime("%a") %></div>
+            <span class="dom"><%= d.strftime("%d") %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <% @list_of_habits.each do |h| %>
+        <div class="tracker-row">
+          <a href="/habits/<%= h.id %>" class="habit-label">
+            <%= h.name %>
+          </a>
+
+          <% @dates.each do |d| %>
+            <% key = "#{h.id}-#{d}" %>
+            <% done = @checks_by_key[key] == true %>
+
+            <% if d <= @today %>
+              <form action="/toggle_habit_check" method="post" style="display:inline;">
+                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                <input type="hidden" name="habit_id" value="<%= h.id %>">
+                <input type="hidden" name="date" value="<%= d %>">
+                <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
+
+                <button type="submit" class="tracker-cell-btn">
+                  <span class="cell <%= done ? "on" : "off" %>"></span>
+                </button>
+              </form>
+            <% else %>
+              <span class="cell off future-cell"></span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
     </div>
-
-    <div>
-      <label for="habit_id_box">
-        Habit
-      </label>
-
-      <input type="text" id="habit_id_box" name="query_habit_id">
-    </div>
-
-    <div>
-      <label for="completed_box">
-        Completed
-      </label>
-
-      <input type="text" id="completed_box" name="query_completed">
-    </div>
-
-    <div>
-      <label for="day_entry_id_box">
-        Day entry
-      </label>
-
-      <input type="text" id="day_entry_id_box" name="query_day_entry_id">
-    </div>
-
-    <button type="submit">
-      Create habit check
-    </button>
-  </form>
-</article>
-
-<hr>
-
-<article>
-  <ul>
-    <% @list_of_habit_checks.each do |a_habit_check| %>
-      <li>
-        <a href="/habit_checks/<%= a_habit_check.id %>">
-          Habit check #<%= a_habit_check.id %>
-        </a>
-      </li>
-    <% end %>
-  </ul>
-</article>
-
-<hr>
+  </div>
+<% end %>

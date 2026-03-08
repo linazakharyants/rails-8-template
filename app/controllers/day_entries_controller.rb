@@ -42,9 +42,9 @@ class DayEntriesController < ApplicationController
 
     if the_day_entry.valid?
       the_day_entry.save
-      redirect_to("/day_entries", { :notice => "Day entry created successfully." })
+      redirect_to("/", { :notice => "Day entry created successfully." })
     else
-      redirect_to("/day_entries", { :alert => the_day_entry.errors.full_messages.to_sentence })
+      redirect_to("/", { :alert => the_day_entry.errors.full_messages.to_sentence })
     end
   end
 

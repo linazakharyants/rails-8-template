@@ -1,111 +1,123 @@
-<h1>
-  Habit check #<%= @the_habit_check.id %> details
-</h1>
+<style>
+  .habit-check-show-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-<article>
-  <div>
-    <a href="/habit_checks">
-      Go back
-    </a>
+  .habit-check-show-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .habit-check-show-card {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background: #fff;
+    padding: 22px;
+    margin-top: 16px;
+  }
+
+  .habit-check-details {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 10px 18px;
+    margin: 0;
+  }
+
+  .habit-check-details dt {
+    font-weight: 700;
+    color: #444;
+  }
+
+  .habit-check-details dd {
+    margin: 0;
+    color: #222;
+  }
+
+  .habit-check-edit-form .form-row {
+    margin-bottom: 16px;
+  }
+
+  .habit-check-edit-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .habit-check-edit-form input[type="text"] {
+    width: 100%;
+    max-width: 520px;
+    padding: 10px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+    background: #fff;
+  }
+</style>
+
+<div class="habit-check-show-header">
+  <h1 class="mb-0">Habit Check #<%= @the_habit_check.id %></h1>
+
+  <div class="habit-check-show-actions">
+    <a href="/habit_checks" class="btn btn-outline-secondary rounded-pill px-3">Go back</a>
+    <a href="/delete_habit_check/<%= @the_habit_check.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete habit check</a>
   </div>
+</div>
 
-  <div>
-    <a href="/delete_habit_check/<%= @the_habit_check.id %>">
-      Delete habit check
-    </a>
-  </div>
-  <dl>
-    <dt>
-      User
-    </dt>
-    <dd>
-      <%= @the_habit_check.user_id %>
-    </dd>
+<div class="habit-check-show-card">
+  <h2 class="h4 mb-3">Details</h2>
 
-    <dt>
-      Habit
-    </dt>
-    <dd>
-      <%= @the_habit_check.habit_id %>
-    </dd>
+  <dl class="habit-check-details">
+    <dt>User</dt>
+    <dd><%= @the_habit_check.user_id %></dd>
 
-    <dt>
-      Completed
-    </dt>
-    <dd>
-      <%= @the_habit_check.completed %>
-    </dd>
+    <dt>Habit</dt>
+    <dd><%= @the_habit_check.habit_id %></dd>
 
-    <dt>
-      Day entry
-    </dt>
-    <dd>
-      <%= @the_habit_check.day_entry_id %>
-    </dd>
+    <dt>Completed</dt>
+    <dd><%= @the_habit_check.completed %></dd>
 
-    <dt>
-      Created at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_habit_check.created_at) %> ago
-    </dd>
+    <dt>Day entry</dt>
+    <dd><%= @the_habit_check.day_entry_id %></dd>
 
-    <dt>
-      Updated at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_habit_check.updated_at) %> ago
-    </dd>
+    <dt>Created at</dt>
+    <dd><%= time_ago_in_words(@the_habit_check.created_at) %> ago</dd>
+
+    <dt>Updated at</dt>
+    <dd><%= time_ago_in_words(@the_habit_check.updated_at) %> ago</dd>
   </dl>
-</article>
+</div>
 
-<hr>
+<div class="habit-check-show-card">
+  <h2 class="h4 mb-3">Edit habit check</h2>
 
+  <form action="/modify_habit_check/<%= @the_habit_check.id %>" method="post" class="habit-check-edit-form">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-<article>
-  <header>
-    <h2>
-      Edit habit check
-    </h2>
-  </header>
-
-  <form action="/modify_habit_check/<%= @the_habit_check.id %>"  method="post" >
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
-
+    <div class="form-row">
+      <label for="user_id_box">User</label>
       <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_habit_check.user_id %>">
     </div>
 
-    <div>
-      <label for="habit_id_box">
-        Habit
-      </label>
-
+    <div class="form-row">
+      <label for="habit_id_box">Habit</label>
       <input type="text" id="habit_id_box" name="query_habit_id" value="<%= @the_habit_check.habit_id %>">
     </div>
 
-    <div>
-      <label for="completed_box">
-        Completed
-      </label>
-
+    <div class="form-row">
+      <label for="completed_box">Completed</label>
       <input type="text" id="completed_box" name="query_completed" value="<%= @the_habit_check.completed %>">
     </div>
 
-    <div>
-      <label for="day_entry_id_box">
-        Day entry
-      </label>
-
+    <div class="form-row">
+      <label for="day_entry_id_box">Day entry</label>
       <input type="text" id="day_entry_id_box" name="query_day_entry_id" value="<%= @the_habit_check.day_entry_id %>">
     </div>
 
-    <button type="submit">
-      Update habit check
-    </button>
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Update habit check</button>
   </form>
-</article>
-
-<hr>
+</div>

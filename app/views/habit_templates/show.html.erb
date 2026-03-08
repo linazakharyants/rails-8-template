@@ -1,57 +1,78 @@
-<h1>
-  Habit Tracker
-</h1>
+<style>
+  .habit-show-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-<article>
-  <div>
-    <a href="/habits">
-      Back to habits
-    </a>
+  .habit-show-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .habit-show-card {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background: #fff;
+    padding: 22px;
+    margin-top: 16px;
+  }
+
+  .habit-edit-form .form-row {
+    margin-bottom: 16px;
+  }
+
+  .habit-edit-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .habit-edit-form input[type="text"] {
+    width: 100%;
+    max-width: 520px;
+    padding: 10px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+    background: #fff;
+  }
+</style>
+
+<div class="habit-show-header">
+  <h1 class="mb-0">Habit Tracker</h1>
+
+  <div class="habit-show-actions">
+    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to habits</a>
+    <a href="/delete_habit/<%= @the_habit.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete habit</a>
   </div>
+</div>
 
-  <div>
-    <a href="/delete_habit/<%= @the_habit.id %>">
-      Delete habit
-    </a>
-  </div>
-</article>
+<div class="habit-show-card">
+  <h2 class="h4 mb-3">Update habit</h2>
 
-<hr>
+  <form action="/modify_habit/<%= @the_habit.id %>" method="post" class="habit-edit-form">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-<article>
-  <header>
-    <h2>
-      Update habit
-    </h2>
-  </header>
-
-  <form action="/modify_habit/<%= @the_habit.id %>" method="post">
-
-    <div>
-      <label for="name_box">
-        Habit name
-      </label>
-
+    <div class="form-row">
+      <label for="name_box">Habit name</label>
       <input type="text"
              id="name_box"
              name="query_name"
              value="<%= @the_habit.name %>">
     </div>
 
-    <div>
-      <label for="description_box">
-        Description (optional)
-      </label>
-
+    <div class="form-row">
+      <label for="description_box">Description (optional)</label>
       <input type="text"
              id="description_box"
              name="query_description"
              value="<%= @the_habit.description %>">
     </div>
 
-    <button type="submit">
-      Update habit
-    </button>
-
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Update habit</button>
   </form>
-</article>
+</div>

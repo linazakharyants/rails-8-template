@@ -1,79 +1,225 @@
-<h1>Habit Tracker</h1>
-
-<div style="margin: 10px 0;">
-  <a href="/habits_manage">Add / Update Habits</a>
-</div>
-
-<div style="margin: 10px 0;">
-  <a href="/">Back to calendar</a>
-</div>
-
 <style>
-  .grid { border-collapse: collapse; }
-  .grid th, .grid td { padding: 4px; text-align: center; }
-  .habit-name { text-align: left; padding-right: 10px; white-space: nowrap; }
-  .cell { width: 16px; height: 16px; border: 1px solid #ddd; border-radius: 4px; display:inline-block; }
-  .on  { background: #222; }
-  .off { background: #fff; }
+  .habits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-  .dow { font-size: 10px; color: #777; line-height: 1.1; }
-  .dom { font-size: 10px; color: #aaa; line-height: 1.1; }
+  .habits-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tracker-card {
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background: #fff;
+    padding: 26px 28px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tracker-table {
+    width: auto;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    margin: 0 auto;
+  }
+
+  .tracker-table th,
+  .tracker-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0 6px;
+  }
+
+  .tracker-table thead th {
+    font-weight: 600;
+  }
+
+  .habit-name {
+    text-align: left;
+    padding-right: 18px;
+    white-space: nowrap;
+    min-width: 150px;
+  }
+
+  .habit-name a {
+    text-decoration: none;
+    color: #2f2f35;
+    font-weight: 600;
+  }
+
+  .habit-name a:hover {
+    text-decoration: underline;
+  }
+
+  .day-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    padding: 6px 0;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    background: #fbfbfb;
+  }
+
+  .dow {
+    font-size: 10px;
+    color: #777;
+    line-height: 1.1;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+
+  .dom {
+    font-size: 11px;
+    color: #999;
+    line-height: 1.1;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+
+  .tracker-cell-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  .cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d8d8d8;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+
+  .cell.off {
+    background: #f4f0ff;
+    border-color: #ddd5ff;
+  }
+
+  .cell.off:hover {
+    background: #ebe5ff;
+    border-color: #cfc2ff;
+    box-shadow: 0 2px 6px rgba(107, 92, 255, 0.06);
+  }
+
+  .cell.on {
+    background: #dff7e6;
+    border-color: #b8e7c5;
+    color: #246b3c;
+    box-shadow: 0 2px 6px rgba(36, 107, 60, 0.08);
+  }
+
+  .cell.on::after {
+    content: "✓";
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+  }
 
   .future-cell {
-    opacity: 0.25;
+    opacity: 0.35;
     cursor: not-allowed;
     pointer-events: none;
+    background: #f7f7f7;
+    border-color: #e6e6e6;
+    box-shadow: none;
+  }
+
+  .empty-habits {
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    background: #fff;
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .tracker-card {
+      overflow-x: auto;
+      justify-content: flex-start;
+    }
   }
 </style>
 
+<div class="habits-header">
+  <h1 class="mb-0">Habit Tracker</h1>
+
+  <div class="habits-actions">
+    <a href="/habits_manage" class="btn btn-dark rounded-pill px-3">Add / Update Habits</a>
+    <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
+  </div>
+</div>
+
 <% if @list_of_habits.empty? %>
-  <p>No habits yet. <a href="/habits_manage">Add a habit to track</a></p>
+  <div class="empty-habits">
+    <p class="mb-0">No habits yet. <a href="/habits_manage">Add a habit to track</a>.</p>
+  </div>
 <% else %>
-  <table class="grid">
-    <thead>
-      <tr>
-        <th></th>
-
-        <% @dates.each do |d| %>
-          <th>
-            <div class="dow"><%= d.strftime("%a") %></div>
-            <div class="dom"><%= d.strftime("%d") %></div>
-          </th>
-        <% end %>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @list_of_habits.each do |h| %>
+  <div class="tracker-card">
+    <table class="tracker-table">
+      <thead>
         <tr>
-          <td class="habit-name">
-            <a href="/habits/<%= h.id %>"><%= h.name %></a>
-          </td>
+          <th></th>
 
           <% @dates.each do |d| %>
-            <% key = "#{h.id}-#{d}" %>
-            <% done = @checks_by_key[key] == true %>
-
-            <td>
-              <% if d <= @today %>
-                <form action="/toggle_habit_check" method="post" style="display:inline;">
-                  <input type="hidden" name="habit_id" value="<%= h.id %>">
-                  <input type="hidden" name="date" value="<%= d %>">
-                  <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
-
-                  <button type="submit" style="border:none; padding:0; background:transparent; cursor:pointer;">
-                    <span class="cell <%= done ? "on" : "off" %>"></span>
-                  </button>
-                </form>
-              <% else %>
-                <span class="cell off future-cell"></span>
-              <% end %>
-            </td>
+            <th>
+              <div class="day-chip">
+                <div class="dow"><%= d.strftime("%a") %></div>
+                <div class="dom"><%= d.strftime("%d") %></div>
+              </div>
+            </th>
           <% end %>
-
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        <% @list_of_habits.each do |h| %>
+          <tr>
+            <td class="habit-name">
+              <a href="/habits/<%= h.id %>"><%= h.name %></a>
+            </td>
+
+            <% @dates.each do |d| %>
+              <% key = "#{h.id}-#{d}" %>
+              <% done = @checks_by_key[key] == true %>
+
+              <td>
+                <% if d <= @today %>
+                  <form action="/toggle_habit_check" method="post" style="display:inline;">
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+                    <input type="hidden" name="habit_id" value="<%= h.id %>">
+                    <input type="hidden" name="date" value="<%= d %>">
+                    <input type="hidden" name="completed" value="<%= done ? "false" : "true" %>">
+
+                    <button type="submit" class="tracker-cell-btn">
+                      <span class="cell <%= done ? "on" : "off" %>"></span>
+                    </button>
+                  </form>
+                <% else %>
+                  <span class="cell off future-cell"></span>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 <% end %>
