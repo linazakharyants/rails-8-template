@@ -1,31 +1,41 @@
-<h1>Your profile</h1>
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0">Your profile</h1>
+    <a href="/" class="btn btn-outline-secondary">Back to calendar</a>
+  </div>
 
-<div style="margin: 10px 0;">
-  <a href="/">Back to calendar</a>
+  <div class="mb-4">
+    <% if @the_user.avatar.attached? %>
+      <%= image_tag url_for(@the_user.avatar),
+            style: "width:96px; height:96px; border-radius:50%; object-fit:cover; border:1px solid #dee2e6;" %>
+    <% else %>
+      <div class="d-flex align-items-center justify-content-center"
+           style="width:96px; height:96px; border-radius:50%; border:1px solid #dee2e6; background:#f8f9fa;">
+        No photo
+      </div>
+    <% end %>
+  </div>
+
+  <form action="/profile" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <div class="mb-3">
+      <label for="name_box" class="form-label fw-semibold">Username</label>
+      <input id="name_box"
+             type="text"
+             name="query_name"
+             value="<%= @the_user.name %>"
+             class="form-control">
+    </div>
+
+    <div class="mb-4">
+      <label for="avatar_box" class="form-label fw-semibold">Profile picture</label>
+      <input id="avatar_box"
+             type="file"
+             name="query_avatar"
+             class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-dark px-4">Save profile</button>
+  </form>
 </div>
-
-<hr>
-
-<% if @the_user&.avatar&.present? %>
-   <%= image_tag url_for(@the_user.avatar),
-      style: "width:90px; height:90px; border-radius:50%; object-fit:cover; border:1px solid #ddd;" %>
-<% else %>
-  <div style="width:90px; height:90px; border-radius:50%; border:1px solid #ddd; display:flex; align-items:center; justify-content:center;">
-    No photo
-  </div>
-<% end %>
-
-
-<form action="/profile" method="post" enctype="multipart/form-data">
-  <div style="margin-bottom: 10px;">
-    <label for="name_box"><strong>Username</strong></label><br>
-    <input id="name_box" type="text" name="query_name" value="<%= @the_user.name %>" style="width: 320px;">
-  </div>
-
-  <div style="margin-bottom: 10px;">
-    <label for="avatar_box"><strong>Profile picture</strong></label><br>
-    <input id="avatar_box" type="file" name="query_avatar">
-  </div>
-
-  <button type="submit">Save profile</button>
-</form>
