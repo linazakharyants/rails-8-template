@@ -1,23 +1,22 @@
-<h1>Note</h1>
-
-<div style="margin: 10px 0;">
-  <a href="/notes">Back to notes</a>
-</div>
-
-<p><strong>Date:</strong> <%= @the_note.date %></p>
-
-<hr>
-
-<h2>Edit note</h2>
-
-<%= form_with(model: @the_note, url: "/modify_note/#{@the_note.id}", scope: nil, method: "post") do |form| %>
-  <div>
-    <%= form.rich_text_area :content %>
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h1 class="mb-0">Edit note</h1>
+    <a href="/notes" class="btn btn-outline-secondary rounded-pill px-3">Back to notes</a>
   </div>
 
-  <button type="submit">Update note</button>
-<% end %>
+  <p class="text-muted mb-4"><strong>Date:</strong> <%= @the_note.date %></p>
 
-<div style="margin-top: 10px;">
-  <a href="/delete_note/<%= @the_note.id %>">Delete note</a>
+  <hr class="my-4">
+
+
+  <%= form_with(model: @the_note, url: "/modify_note/#{@the_note.id}", scope: nil, method: "post") do |form| %>
+    <div class="mb-3">
+      <%= form.rich_text_area :content %>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <button type="submit" class="btn btn-dark rounded-3 px-4">Update note</button>
+      <a href="/delete_note/<%= @the_note.id %>" class="btn btn-outline-danger rounded-3 px-4">Delete note</a>
+    </div>
+  <% end %>
 </div>
