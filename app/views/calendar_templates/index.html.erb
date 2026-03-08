@@ -5,7 +5,7 @@
   .page-wrap {
     display: flex;
     gap: 18px;
-    align-items: stretch; /* sidebar matches calendar height */
+    align-items: stretch;
     max-width: 1200px;
   }
 
@@ -15,9 +15,9 @@
   }
 
   .notes-col {
-  width: 170px; /* was 260px — now ~2/3 */
-  display: flex;
-}
+    width: 170px;
+    display: flex;
+  }
 
   .notes-card {
     height: 100%;
@@ -58,7 +58,6 @@
     margin-top: 10px;
   }
 
-  /* Make the banners align with the calendar column width */
   .top-banner {
     width: 100%;
     padding: 12px 14px;
@@ -67,6 +66,25 @@
     border-radius: 12px;
     font-size: 14px;
     box-sizing: border-box;
+  }
+
+  /* Highlight box styling */
+  .highlight-pill {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: #ffd6e7;
+    color: #7a0f3b;
+
+    white-space: normal;
+    word-break: break-word;
+    overflow: hidden;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   @media (max-width: 1000px) {
@@ -79,17 +97,15 @@
 <h1>Calendar</h1>
 
 <div class="page-wrap">
-  <!-- LEFT: calendar column -->
+
   <div class="calendar-col">
 
-    <!-- Line of the Day Banner -->
     <div class="top-banner">
       <a href="/highlights/<%= Date.today %>" style="text-decoration:none; color:inherit;">
         <strong>Line of the day</strong>
       </a>
     </div>
 
-    <!-- Habits Banner -->
     <div class="top-banner">
       <a href="/habits" style="text-decoration:none; color:inherit;">
         <strong>Habit Tracker</strong>
@@ -97,9 +113,9 @@
     </div>
 
     <div id="calendar"></div>
+
   </div>
 
-  <!-- RIGHT: notes notebook panel -->
   <div class="notes-col">
     <a class="notes-card" href="/notes">
       <div class="notes-title">Notes</div>
@@ -107,6 +123,7 @@
       <div class="notes-hint">Open notebook →</div>
     </a>
   </div>
+
 </div>
 
 <script>
@@ -121,12 +138,6 @@ document.addEventListener("DOMContentLoaded", function() {
       .replaceAll("'", "&#039;");
   }
 
-  function truncate(str, maxLen) {
-    str = String(str || "").trim();
-    if (str.length <= maxLen) return str;
-    return str.slice(0, maxLen - 1).trim() + "…";
-  }
-
   var calendarElement = document.getElementById("calendar");
 
   var calendar = new FullCalendar.Calendar(calendarElement, {
@@ -136,11 +147,14 @@ document.addEventListener("DOMContentLoaded", function() {
     events: "/calendar.json",
 
     eventContent: function(info) {
-      var title = info.event.title;
+
+      var title = info.event.title || "";
+
       return {
-        html: "<div style='font-size:12px; font-weight:bold;'>" +
-              escapeHtml(truncate(title, 22)) +
-              "</div>"
+        html:
+          "<div class='highlight-pill'>" +
+          escapeHtml(title) +
+          "</div>"
       };
     },
 
@@ -149,10 +163,10 @@ document.addEventListener("DOMContentLoaded", function() {
       var dayCell = info.el.closest(".fc-daygrid-day");
       if (!dayCell) return;
 
-      // --- Insert Habit % between the highlight and the frame link ---
       var pct = info.event.extendedProps.habit_percent;
 
       if (pct !== null && pct !== undefined && !dayCell.querySelector(".habit-percent")) {
+
         var pctDiv = document.createElement("div");
         pctDiv.className = "habit-percent";
         pctDiv.innerText = "Habits: " + pct + "%";
@@ -164,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (frameArea) frameArea.appendChild(pctDiv);
       }
 
-      // --- Frame of the Day link (only if a photo exists) ---
       var photo = info.event.extendedProps.photo;
       if (!photo) return;
 

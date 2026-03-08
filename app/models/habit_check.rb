@@ -12,4 +12,7 @@
 #  user_id      :integer
 #
 class HabitCheck < ApplicationRecord
+  belongs_to :user, required: true, class_name: "User", foreign_key: "user_id"
+  belongs_to :day_entry, required: true, class_name: "DayEntry", foreign_key: "day_entry_id"
+  belongs_to :habit, required: true, class_name: "Habit", foreign_key: "habit_id"
 end

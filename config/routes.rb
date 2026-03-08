@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get("/highlights/:date", { :controller => "day_entries", :action => "edit_highlight" })
   post("/upsert_highlight/:date", { :controller => "day_entries", :action => "upsert_highlight" })
 
+
   #habits
   get("/frames/:path_id", { :controller => "day_entries", :action => "edit_frame" })
   post("/modify_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })

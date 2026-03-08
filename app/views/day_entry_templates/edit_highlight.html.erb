@@ -28,7 +28,8 @@
     <h2>Highlight of the day</h2>
   </header>
 
-  <form action="/modify_day_entry_highlight/<%= @the_day_entry.date %>" method="post">
+  <form action="/upsert_highlight/<%= @date %>" method="post">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
     <div>
       <label for="highlight_box">Highlight</label>
       <input
@@ -49,4 +50,3 @@
     </button>
   </form>
 </article>
-

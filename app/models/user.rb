@@ -20,6 +20,11 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
+       has_many  :dayentries, class_name: "DayEntry", foreign_key: "user_id", dependent: :destroy
+       has_many  :habits, class_name: "Habit", foreign_key: "user_id", dependent: :destroy
+       has_many  :habitchecks, class_name: "HabitCheck", foreign_key: "user_id", dependent: :destroy
+       has_many  :notes, class_name: "Note", foreign_key: "user_id", dependent: :destroy
+       has_many  :gratitude_chatbots, class_name: "GratitudeEntry", foreign_key: "user_id", dependent: :destroy
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

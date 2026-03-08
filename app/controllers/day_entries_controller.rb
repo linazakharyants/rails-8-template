@@ -80,8 +80,8 @@ class DayEntriesController < ApplicationController
 
 
   def edit_highlight
-    date = safe_parse_date(params.fetch("date"))
-    @the_day_entry = find_or_initialize_by_date(date)
+    @date = safe_parse_date(params.fetch("date"))
+    @the_day_entry = find_or_initialize_by_date(@date)
 
  
 
@@ -101,12 +101,12 @@ class DayEntriesController < ApplicationController
     end
 
     if the_day_entry.valid?
-      the_day_entry.save
-      redirect_to("/day_entries/#{the_day_entry.id}", { :notice => "Highlight saved successfully." })
-    else
-      redirect_to("/day_entries/highlight/#{date}", { :alert => the_day_entry.errors.full_messages.to_sentence })
-    end
+  the_day_entry.save
+  redirect_to("/", { :notice => "Highlight saved successfully." })
+  else
+  redirect_to("/highlights/#{@date}", { :alert => the_day_entry.errors.full_messages.to_sentence })
   end
+end
 
 
   def edit_frame

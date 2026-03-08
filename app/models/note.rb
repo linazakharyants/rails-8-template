@@ -12,4 +12,6 @@
 #  user_id      :integer
 #
 class Note < ApplicationRecord
+  belongs_to :user, required: true, class_name: "User", foreign_key: "user_id"
+  belongs_to :day_entry, required: true, class_name: "DayEntry", foreign_key: "day_entry_id"
 end
