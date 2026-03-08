@@ -4,3 +4,6 @@ import "controllers"
 
 // Change to true to enable Turbo Drive
 Turbo.session.drive = false
+
+import "trix"
+import "@rails/actiontext"

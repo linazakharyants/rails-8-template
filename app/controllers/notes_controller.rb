@@ -39,11 +39,17 @@ class NotesController < ApplicationController
       day_entry.save
     end
 
-    the_note.day_entry_id = day_entry.id
-    the_note.body = params.fetch("query_body")
+    content_value = params.dig("note", "content").presence || params["query_content"].to_s
 
-    if the_note.valid?
-      the_note.save
+    if content_blank_for_trix?(content_value)
+      redirect_to("/notes", { :alert => "Note can't be empty." })
+      return
+    end
+
+    the_note.day_entry_id = day_entry.id
+    the_note.content = content_value
+
+    if the_note.save
       redirect_to("/notes/#{the_note.id}", { :notice => "Note saved." })
     else
       redirect_to("/notes", { :alert => the_note.errors.full_messages.to_sentence })
@@ -54,10 +60,16 @@ class NotesController < ApplicationController
     the_id = params.fetch("path_id")
     the_note = current_user.notes.where({ :id => the_id }).at(0)
 
-    the_note.body = params.fetch("query_body")
+    content_value = params.dig("note", "content").presence || params["query_content"].to_s
 
-    if the_note.valid?
-      the_note.save
+    if content_blank_for_trix?(content_value)
+      redirect_to("/notes/#{the_note.id}", { :alert => "Note can't be empty." })
+      return
+    end
+
+    the_note.content = content_value
+
+    if the_note.save
       redirect_to("/notes/#{the_note.id}", { :notice => "Note updated." })
     else
       redirect_to("/notes/#{the_note.id}", { :alert => the_note.errors.full_messages.to_sentence })
@@ -70,5 +82,12 @@ class NotesController < ApplicationController
 
     the_note.destroy
     redirect_to("/notes", { :notice => "Note deleted." })
+  end
+
+  private
+
+  def content_blank_for_trix?(html)
+    stripped = ActionView::Base.full_sanitizer.sanitize(html.to_s).gsub(/\u00A0/, " ").strip
+    stripped.blank?
   end
 end

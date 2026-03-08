@@ -9,15 +9,17 @@
 <h2>Add a note</h2>
 
 <form action="/insert_note" method="post">
-  <%# Optional: if you're on /notes?date=YYYY-MM-DD this will use that date %>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
   <% if @selected_date.present? %>
     <input type="hidden" name="query_date" value="<%= @selected_date %>">
     <p>Date: <%= @selected_date %></p>
   <% end %>
 
   <div>
-    <label for="body_box">Note</label><br>
-    <textarea id="body_box" name="query_body" rows="6" style="width: 100%; max-width: 700px;"></textarea>
+    <label for="content_box">Note</label><br>
+    <trix-editor input="query_content"></trix-editor>
+    <input id="query_content" type="hidden" name="query_content">
   </div>
 
   <button type="submit">Save note</button>
@@ -25,13 +27,17 @@
 
 <ul>
   <% @list_of_notes.each do |n| %>
-    <li>
+    <% preview_text =
+         if n.respond_to?(:content) && n.content.present?
+           n.content.to_plain_text
+         else
+           n.body.to_s
+         end %>
+
+    <li style="margin-bottom: 10px;">
       <a href="/notes/<%= n.id %>">
-        <%= n.body.to_s.truncate(60) %>
+        <%= preview_text.truncate(60) %>
       </a>
-      <% if n.date.present? %>
-        <span style="color:#777;">(<%= n.date %>)</span>
-      <% end %>
     </li>
   <% end %>
 </ul>

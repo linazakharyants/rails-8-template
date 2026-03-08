@@ -10,13 +10,13 @@
 
 <h2>Edit note</h2>
 
-<form action="/modify_note/<%= @the_note.id %>" method="post">
+<%= form_with(model: @the_note, url: "/modify_note/#{@the_note.id}", scope: nil, method: "post") do |form| %>
   <div>
-    <textarea name="query_body" rows="10" style="width: 100%; max-width: 700px;"><%= @the_note.body %></textarea>
+    <%= form.rich_text_area :content %>
   </div>
 
   <button type="submit">Update note</button>
-</form>
+<% end %>
 
 <div style="margin-top: 10px;">
   <a href="/delete_note/<%= @the_note.id %>">Delete note</a>
