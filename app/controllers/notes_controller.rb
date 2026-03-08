@@ -21,7 +21,6 @@ class NotesController < ApplicationController
 
   def create
     the_note = Note.new
-
     the_note.user_id = current_user.id
 
     if params["query_date"].present?
@@ -30,6 +29,17 @@ class NotesController < ApplicationController
       the_note.date = Date.current
     end
 
+    day_entry = current_user.dayentries.where({ :date => the_note.date }).at(0)
+
+    if day_entry.nil?
+      day_entry = DayEntry.new
+      day_entry.user_id = current_user.id
+      day_entry.date = the_note.date
+      day_entry.highlight_of_the_day = ""
+      day_entry.save
+    end
+
+    the_note.day_entry_id = day_entry.id
     the_note.body = params.fetch("query_body")
 
     if the_note.valid?
@@ -59,7 +69,6 @@ class NotesController < ApplicationController
     the_note = current_user.notes.where({ :id => the_id }).at(0)
 
     the_note.destroy
-
     redirect_to("/notes", { :notice => "Note deleted." })
   end
 end
