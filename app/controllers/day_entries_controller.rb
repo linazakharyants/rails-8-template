@@ -71,7 +71,8 @@ class DayEntriesController < ApplicationController
     the_id = params.fetch("path_id")
     the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
     the_day_entry.destroy
-    redirect_to("/day_entries", { :notice => "Day entry deleted successfully." })
+
+    redirect_to("/", { :notice => "Day entry deleted successfully." })
   end
 
   def edit_highlight
@@ -98,8 +99,7 @@ class DayEntriesController < ApplicationController
   end
 
   def edit_frame
-    the_id = params.fetch("path_id")
-    @the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
+    @the_day_entry = current_user.dayentries.find_or_create_by!(date: params[:path_id])
     render({ :template => "day_entry_templates/edit_frame" })
   end
 
@@ -107,16 +107,29 @@ class DayEntriesController < ApplicationController
     the_id = params.fetch("path_id")
     the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
 
-    if params["query_photo"].present?
-      the_day_entry.photo.attach(params["query_photo"])
+    if params["query_photo"].blank?
+      redirect_to("/frames/#{the_day_entry.date}", { :alert => "Please upload an image before saving." })
+      return
     end
 
-    if the_day_entry.valid?
-      the_day_entry.save
-      redirect_to("/day_entries/#{the_day_entry.id}", { :notice => "Frame updated successfully." })
+    the_day_entry.photo.attach(params["query_photo"])
+
+    if the_day_entry.save
+      redirect_to("/frames/#{the_day_entry.date}", { :notice => "Frame updated successfully." })
     else
-      redirect_to("/frames/#{the_day_entry.id}", { :alert => the_day_entry.errors.full_messages.to_sentence })
+      redirect_to("/frames/#{the_day_entry.date}", { :alert => the_day_entry.errors.full_messages.to_sentence })
     end
+  end
+
+  def destroy_frame
+    the_id = params.fetch("path_id")
+    the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
+
+    if the_day_entry.photo.attached?
+      the_day_entry.photo.purge
+    end
+
+    redirect_to("/frames/#{the_day_entry.date}", { :notice => "Frame deleted successfully." })
   end
 
   private

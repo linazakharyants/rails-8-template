@@ -178,7 +178,7 @@
 
     <div class="top-banner">
       <a href="/highlights/<%= Date.today %>" id="nav-highlight">Line of the Day</a>
-      <a href="/highlights/<%= Date.today %>" id="nav-frame">Frame of the Day</a>
+      <a href="/frames/<%= Date.today %>" id="nav-frame">Frame of the Day</a>
       <a href="/habits" id="nav-habits">Habit Tracker</a>
     </div>
 
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (dayCell.querySelector(".frame-pill")) return;
 
       var link = document.createElement("a");
-      link.href = "/frames/" + info.event.id;
+      link.href = "/frames/" + info.event.startStr;
       link.innerText = "Frame of the Day";
       link.className = "frame-pill";
 

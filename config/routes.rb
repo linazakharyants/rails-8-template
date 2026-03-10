@@ -9,10 +9,12 @@ Rails.application.routes.draw do
   post("/upsert_highlight/:date", { :controller => "day_entries", :action => "upsert_highlight" })
 
 
-  #habits
+  #frames
   get("/frames/:path_id", { :controller => "day_entries", :action => "edit_frame" })
-  post("/modify_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })
-
+  post("/modify_day_entry_frame/:path_id", { :controller => "day_entries", :action => "update_frame" })
+  get("/delete_frame/:path_id", { :controller => "day_entries", :action => "destroy_frame" })
+  
+  #habits
   post("/insert_habit", { :controller => "habits", :action => "create" })
   get("/habits", { :controller => "habits", :action => "index" })
   post("/toggle_habit/:habit_id", { :controller => "habit_checks", :action => "toggle" })
