@@ -148,12 +148,84 @@
     font-weight: 700;
     line-height: 1.2;
     text-decoration: none;
+    cursor: pointer;
   }
 
   .frame-pill:hover {
     background: #d2e8ff;
     text-decoration: none;
     color: #215a9a;
+  }
+
+  .frame-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 3000;
+  }
+
+  .frame-modal.open {
+    display: flex;
+  }
+
+  .frame-modal-card {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    max-width: 92vw;
+    max-height: 90vh;
+    background: #fffbfd;
+    border: 1px solid #faeaf1;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+
+  .frame-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px 12px 18px;
+    background: #fffbfd;
+  }
+
+  .frame-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #8a1d4f;
+    margin: 0;
+  }
+
+  .frame-modal-close {
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: #8a1d4f;
+    padding: 0;
+  }
+
+  .frame-modal-image-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+  }
+
+  .frame-modal-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 600px;
+    max-height: 70vh;
+    border-radius: 0;
+    background: transparent;
   }
 
   @media (max-width: 1000px) {
@@ -194,9 +266,20 @@
   </div>
 </div>
 
+<div id="frame-modal" class="frame-modal">
+  <div class="frame-modal-card">
+    <div class="frame-modal-header">
+      <div class="frame-modal-title">Frame of the Day</div>
+      <button type="button" id="frame-modal-close" class="frame-modal-close">&times;</button>
+    </div>
+    <div class="frame-modal-image-wrap">
+      <img id="frame-modal-image" class="frame-modal-image" src="" alt="Frame of the Day">
+    </div>
+  </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-
   function escapeHtml(str) {
     return String(str || "")
       .replaceAll("&", "&amp;")
@@ -215,6 +298,35 @@ document.addEventListener("DOMContentLoaded", function() {
   } else if (path.includes("habit")) {
     document.getElementById("nav-habits")?.classList.add("active");
   }
+
+  var modal = document.getElementById("frame-modal");
+  var modalImage = document.getElementById("frame-modal-image");
+  var modalClose = document.getElementById("frame-modal-close");
+
+  function openFrameModal(photoUrl) {
+    if (!photoUrl) return;
+    modalImage.src = photoUrl;
+    modal.classList.add("open");
+  }
+
+  function closeFrameModal() {
+    modal.classList.remove("open");
+    modalImage.src = "";
+  }
+
+  modalClose.addEventListener("click", closeFrameModal);
+
+  modal.addEventListener("click", function(e) {
+    if (e.target === modal) {
+      closeFrameModal();
+    }
+  });
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      closeFrameModal();
+    }
+  });
 
   var calendarElement = document.getElementById("calendar");
 
@@ -262,14 +374,14 @@ document.addEventListener("DOMContentLoaded", function() {
       if (dayCell.querySelector(".frame-pill")) return;
 
       var link = document.createElement("a");
-      link.href = "/frames/" + info.event.startStr;
+      link.href = "#";
       link.innerText = "Frame of the Day";
       link.className = "frame-pill";
 
       link.addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = link.href;
+        openFrameModal(photo);
       });
 
       frameArea.appendChild(link);

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   #daily entries
   get("/highlights/:date", { :controller => "day_entries", :action => "edit_highlight" })
   post("/upsert_highlight/:date", { :controller => "day_entries", :action => "upsert_highlight" })
+  get("/delete_highlight/:path_id", { :controller => "day_entries", :action => "destroy_highlight" })
 
 
   #frames

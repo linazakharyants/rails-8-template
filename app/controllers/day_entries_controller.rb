@@ -67,13 +67,15 @@ class DayEntriesController < ApplicationController
     end
   end
 
-  def destroy
-    the_id = params.fetch("path_id")
-    the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
-    the_day_entry.destroy
+  def destroy_highlight
+  the_id = params.fetch("path_id")
+  the_day_entry = current_user.dayentries.where({ :id => the_id }).at(0)
 
-    redirect_to("/", { :notice => "Day entry deleted successfully." })
-  end
+  the_day_entry.highlight_of_the_day = nil
+  the_day_entry.save
+
+  redirect_to("/highlights/#{the_day_entry.date}", { :notice => "Highlight deleted successfully." })
+end
 
   def edit_highlight
     @date = safe_parse_date(params.fetch("date"))

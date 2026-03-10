@@ -23,8 +23,10 @@
 <style>
 
 body {
-  background: #f4f0ff; /* light violet */
+  background: #f4f0ff;
 }
+
+/* ---------- Layout ---------- */
 
 .app-shell {
   max-width: 1320px;
@@ -67,8 +69,6 @@ body {
   font-weight: 600;
 }
 
-/* main page container (calendar, notes, etc) */
-
 .page-card {
   background: white;
   border-radius: 18px;
@@ -77,63 +77,161 @@ body {
   border: 1px solid #eee;
 }
 
+/* ---------- Flash alerts ---------- */
+
+.flash-wrap {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+}
+
+.flash-message {
+  margin: 0;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.flash-message.flash-hide {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ---------- Hover / fade interactions ---------- */
+
+.page-card,
+.top-banner,
+.notes-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+/* subtle lift on hover */
+.page-card:hover,
+.top-banner:hover,
+.notes-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.10);
+}
+
+/* slight dim when inactive */
+.page-card:not(:hover),
+.top-banner:not(:hover),
+.notes-card:not(:hover) {
+  opacity: 0.97;
+}
+
+/* notes card slightly more interactive */
+.notes-card:hover {
+  transform: translateY(-3px) scale(1.01);
+}
+
+/* smoother banner button interaction */
+.top-banner a {
+  transition: background 0.18s ease, transform 0.15s ease;
+}
+
+.top-banner a:hover {
+  transform: translateY(-1px);
+}
+
+/* calendar pills interaction */
+.highlight-pill,
+.habit-pill,
+.frame-pill {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.highlight-pill:hover,
+.habit-pill:hover,
+.frame-pill:hover {
+  transform: translateY(-1px);
+}
+
 </style>
 
   </head>
 
   <body>
+    <div class="app-shell">
 
-<div class="app-shell">
+      <div class="topbar">
 
-  <div class="topbar">
+        <% if user_signed_in? %>
 
-    <% if user_signed_in? %>
+          <div class="topbar-user">
 
-      <div class="topbar-user">
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar, class: "topbar-avatar" %>
+            <% else %>
+              <div class="topbar-avatar-fallback">
+                <%= (current_user.name.presence || current_user.email).to_s.first.upcase %>
+              </div>
+            <% end %>
 
-        <% if current_user.avatar.attached? %>
-          <%= image_tag current_user.avatar, class: "topbar-avatar" %>
-        <% else %>
-          <div class="topbar-avatar-fallback">
-            <%= (current_user.name.presence || current_user.email).to_s.first.upcase %>
+            <a href="/profile" class="text-decoration-none text-dark fw-semibold">
+              <%= current_user.name.presence || "User" %>
+            </a>
+
           </div>
+
+          <%= button_to "Log out",
+                destroy_user_session_path,
+                method: :delete,
+                class: "btn btn-outline-secondary rounded-pill px-3" %>
+
+        <% else %>
+
+          <div class="d-flex gap-2">
+            <a href="<%= new_user_session_path %>" class="btn btn-outline-secondary rounded-pill px-3">Log in</a>
+            <a href="<%= new_user_registration_path %>" class="btn btn-dark rounded-pill px-3">Sign up</a>
+          </div>
+
         <% end %>
 
-        <a href="/profile" class="text-decoration-none text-dark fw-semibold">
-          <%= current_user.name.presence || "User" %>
-        </a>
-
       </div>
 
-      <%= button_to "Log out",
-            destroy_user_session_path,
-            method: :delete,
-            class: "btn btn-outline-secondary rounded-pill px-3" %>
+      <% if notice.present? || alert.present? %>
+        <div id="flash-messages" class="flash-wrap">
+          <% if notice.present? %>
+            <div class="alert alert-success flash-message" role="alert">
+              <%= notice %>
+            </div>
+          <% end %>
 
-    <% else %>
+          <% if alert.present? %>
+            <div class="alert alert-danger flash-message" role="alert">
+              <%= alert %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
 
-      <div class="d-flex gap-2">
-        <a href="<%= new_user_session_path %>" class="btn btn-outline-secondary rounded-pill px-3">Log in</a>
-        <a href="<%= new_user_registration_path %>" class="btn btn-dark rounded-pill px-3">Sign up</a>
+      <div class="page-card">
+        <%= yield %>
       </div>
 
-    <% end %>
+    </div>
 
-  </div>
+    <script>
+      document.addEventListener("turbo:load", function() {
+        var flashes = document.querySelectorAll(".flash-message");
 
-  <% if notice.present? %>
-    <div class="alert alert-success"><%= notice %></div>
-  <% end %>
+        flashes.forEach(function(flash) {
+          setTimeout(function() {
+            flash.classList.add("flash-hide");
 
-  <% if alert.present? %>
-    <div class="alert alert-danger"><%= alert %></div>
-  <% end %>
-
-  <div class="page-card">
-    <%= yield %>
-  </div>
-
-</div>
+            setTimeout(function() {
+              flash.remove();
+            }, 400);
+          }, 3000);
+        });
+      });
+    </script>
 
   </body>
 </html>

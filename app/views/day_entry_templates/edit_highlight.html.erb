@@ -10,7 +10,9 @@
 
     <div class="d-flex gap-2 flex-wrap">
       <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
-      <a href="/day_entries" class="btn btn-outline-secondary rounded-pill px-3">All day entries</a>
+      <% if @the_day_entry.persisted? %>
+    <a href="/delete_highlight/<%= @the_day_entry.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete highlight</a>
+  <% end %>
     </div>
   </div>
 
