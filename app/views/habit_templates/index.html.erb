@@ -161,14 +161,14 @@
   <h1 class="mb-0">Habit Tracker</h1>
 
   <div class="habits-actions">
-    <a href="/habits_manage" class="btn btn-dark rounded-pill px-3">Add / Update Habits</a>
-    <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
+    <a href="/habits_manage" class="btn btn-dark rounded-pill px-3">Manage Habits</a>
+    <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to Calendar</a>
   </div>
 </div>
 
 <% if @list_of_habits.empty? %>
   <div class="empty-habits">
-    <p class="mb-0">No habits yet. <a href="/habits_manage">Add a habit to track</a>.</p>
+    <p class="mb-0">No habits yet. <a href="/habits_manage">Add your first habit.</a></p>
   </div>
 <% else %>
   <div class="tracker-card">

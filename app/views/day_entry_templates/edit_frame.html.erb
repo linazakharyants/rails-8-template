@@ -3,8 +3,8 @@
     <h1 class="mb-0">Frame of the Day</h1>
 
     <div class="d-flex gap-2 flex-wrap">
-      <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
-      <a href="/delete_frame/<%= @the_day_entry.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete day entry</a>
+      <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to Calendar</a>
+      <a href="/delete_frame/<%= @the_day_entry.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete Frame</a>
     </div>
   </div>
 
@@ -15,14 +15,14 @@
   <hr class="my-4">
 
   <div class="mb-4">
-    <h2 class="h4 mb-3">Current frame</h2>
+    <h2 class="h4 mb-3">Today's Frame</h2>
 
     <% if @the_day_entry.photo.attached? %>
       <%= image_tag url_for(@the_day_entry.photo),
             style: "max-width: 320px; width: 100%; border-radius: 14px; border: 1px solid #ddd;" %>
     <% else %>
       <div class="border rounded-4 p-4 text-muted bg-white" style="max-width: 320px;">
-        No frame yet
+        No frame yet — capture a moment from today.
       </div>
     <% end %>
   </div>
@@ -32,9 +32,9 @@
   <div>
     <h2 class="h4 mb-3">
       <% if @the_day_entry.photo.attached? %>
-        Update frame
+        Update Frame
       <% else %>
-        Add frame
+        Add Frame
       <% end %>
     </h2>
 
@@ -42,15 +42,15 @@
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
       <div class="mb-3" style="max-width: 420px;">
-        <label for="photo_box" class="form-label fw-semibold">Upload a new frame</label>
+        <label for="photo_box" class="form-label fw-semibold">Upload a moment from today</label>
         <input id="photo_box" type="file" name="query_photo" class="form-control">
       </div>
 
       <button type="submit" class="btn btn-dark rounded-3 px-4">
         <% if @the_day_entry.photo.attached? %>
-          Update frame
+          Update Frame
         <% else %>
-          Save frame
+          Save Frame
         <% end %>
       </button>
     </form>
