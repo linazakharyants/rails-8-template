@@ -126,6 +126,14 @@
     font-size: 11px;
     font-weight: 700;
     line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .habit-pill:hover {
+    background: #d4f1dd;
+    text-decoration: none;
+    color: #246b3c;
   }
 
   .frame-pill {
@@ -234,10 +242,18 @@ document.addEventListener("DOMContentLoaded", function() {
       var pct = info.event.extendedProps.habit_percent;
 
       if (pct !== null && pct !== undefined && !dayCell.querySelector(".habit-pill")) {
-        var pctDiv = document.createElement("div");
-        pctDiv.className = "habit-pill";
-        pctDiv.innerText = "Habits " + pct + "%";
-        frameArea.appendChild(pctDiv);
+        var habitLink = document.createElement("a");
+        habitLink.className = "habit-pill";
+        habitLink.href = "/habits";
+        habitLink.innerText = "Habits " + pct + "%";
+
+        habitLink.addEventListener("click", function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = habitLink.href;
+        });
+
+        frameArea.appendChild(habitLink);
       }
 
       var photo = info.event.extendedProps.photo;

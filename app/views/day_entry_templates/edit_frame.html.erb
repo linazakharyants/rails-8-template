@@ -1,60 +1,58 @@
-<h1>Frame of the Day</h1>
+<div class="page-card">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="mb-0">Frame of the Day</h1>
 
-<article>
-  <div>
-    <a href="/">Back to calendar</a>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
+      <a href="/delete_day_entry/<%= @the_day_entry.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete day entry</a>
+    </div>
   </div>
 
-  <div>
-    <a href="/day_entries/<%= @the_day_entry.id %>">Back to entry</a>
+  <div class="mb-4">
+    <p class="text-muted mb-2"><strong>Date:</strong> <%= @the_day_entry.date %></p>
   </div>
 
-  <div>
-    <a href="/delete_day_entry/<%= @the_day_entry.id %>">Delete day entry</a>
-  </div>
+  <hr class="my-4">
 
-  <dl>
-    <dt>Date</dt>
-    <dd><%= @the_day_entry.date %></dd>
+  <div class="mb-4">
+    <h2 class="h4 mb-3">Current frame</h2>
 
-    <dt>Current frame</dt>
-    <dd>
-      <% if @the_day_entry.photo.attached? %>
-        <%= image_tag url_for(@the_day_entry.photo), style: "max-width:300px; border-radius:10px;" %>
-      <% else %>
+    <% if @the_day_entry.photo.attached? %>
+      <%= image_tag url_for(@the_day_entry.photo),
+            style: "max-width: 320px; width: 100%; border-radius: 14px; border: 1px solid #ddd;" %>
+    <% else %>
+      <div class="border rounded-4 p-4 text-muted bg-white" style="max-width: 320px;">
         No frame yet
-      <% end %>
-    </dd>
-  </dl>
-</article>
+      </div>
+    <% end %>
+  </div>
 
-<hr>
+  <hr class="my-4">
 
-<article>
-  <header>
-    <h2>
+  <div>
+    <h2 class="h4 mb-3">
       <% if @the_day_entry.photo.attached? %>
         Update frame
       <% else %>
         Add frame
       <% end %>
     </h2>
-  </header>
 
-  <form action="/modify_day_entry_frame/<%= @the_day_entry.id %>" method="post" enctype="multipart/form-data">
-    <div>
-      <label for="photo_box">Upload a new frame</label>
-      <input id="photo_box" type="file" name="query_photo">
-    </div>
+    <form action="/modify_day_entry_frame/<%= @the_day_entry.id %>" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-    <button type="submit">
-      <% if @the_day_entry.photo.attached? %>
-        Update frame
-      <% else %>
-        Save frame
-      <% end %>
-    </button>
-  </form>
-</article>
+      <div class="mb-3" style="max-width: 420px;">
+        <label for="photo_box" class="form-label fw-semibold">Upload a new frame</label>
+        <input id="photo_box" type="file" name="query_photo" class="form-control">
+      </div>
 
-
+      <button type="submit" class="btn btn-dark rounded-3 px-4">
+        <% if @the_day_entry.photo.attached? %>
+          Update frame
+        <% else %>
+          Save frame
+        <% end %>
+      </button>
+    </form>
+  </div>
+</div>
