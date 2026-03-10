@@ -1,116 +1,144 @@
 <style>
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 12px;
-}
+  .notes-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 
-.note-row {
-  display: block;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  background: #fff;
+  .notes-topbar h1 {
+    margin: 0;
+  }
 
-  text-decoration: none;
-  color: inherit;
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
 
-  transition: all 0.15s ease;
-}
+  .note-row {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s ease;
+  }
 
-.note-row:hover {
-  background: #f8f7ff;
-  border-color: #dcd7ff;
-}
+  .note-row:hover {
+    background: #f8f7ff;
+    border-color: #dcd7ff;
+    transform: translateY(-1px);
+  }
 
-.note-preview {
-  font-size: 14px;
-  line-height: 1.4;
-}
+  .note-preview {
+    font-size: 14px;
+    line-height: 1.4;
+  }
 
-.note-date {
-  font-size: 12px;
-  color: #888;
-  margin-top: 4px;
-}
+  .note-date {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
 
-.note-editor {
-  margin-top: 12px;
-  margin-bottom: 14px;
-}
+  .note-editor {
+    margin-top: 12px;
+    margin-bottom: 14px;
+  }
 
-.note-editor trix-editor {
-  min-height: 220px;
-  border-radius: 10px;
-}
+  .note-editor trix-editor {
+    min-height: 220px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 10px 12px;
+  }
 
-.notes-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
+  .notes-section-title {
+    margin-bottom: 12px;
+  }
 
-.back-link {
-  text-decoration: none;
-  font-size: 14px;
-}
+  .note-form-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 22px;
+  }
+
+  .notes-empty {
+    padding: 16px;
+    border: 1px dashed #d8d8d8;
+    border-radius: 12px;
+    background: #fcfcfc;
+    color: #777;
+    font-size: 14px;
+  }
 </style>
 
-
-<h1>Notes</h1>
-
-<div class="notes-header">
-  <a href="/" class="back-link">← Back to calendar</a>
+<div class="notes-topbar">
+  <h1>Notes</h1>
+  <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to calendar</a>
 </div>
 
-<hr>
+<hr class="my-4">
 
-<h2>Add a note</h2>
+<h2 class="notes-section-title">Add a note</h2>
 
-<form action="/insert_note" method="post">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+<div class="note-form-card">
+  <form action="/insert_note" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-  <% if @selected_date.present? %>
-    <input type="hidden" name="query_date" value="<%= @selected_date %>">
-    <p class="note-date">Date: <%= @selected_date %></p>
-  <% end %>
+    <% if @selected_date.present? %>
+      <input type="hidden" name="query_date" value="<%= @selected_date %>">
+      <p class="note-date mb-3">Date: <%= @selected_date %></p>
+    <% end %>
 
-  <div class="note-editor">
-    <label for="content_box"><strong>Note</strong></label><br>
+    <div class="note-editor">
+      <label for="content_box" class="fw-semibold mb-2 d-block">Note</label>
+      <trix-editor input="query_content"></trix-editor>
+      <input id="query_content" type="hidden" name="query_content">
+    </div>
 
-    <trix-editor input="query_content"></trix-editor>
-    <input id="query_content" type="hidden" name="query_content">
-  </div>
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Save note</button>
+  </form>
+</div>
 
-  <button type="submit">Save note</button>
-</form>
+<hr class="my-4">
 
-<hr>
-
-<h2>Your notes</h2>
+<h2 class="notes-section-title">Your notes</h2>
 
 <div class="notes-list">
-  <% @list_of_notes.each do |n| %>
-    <% preview_text =
-         if n.respond_to?(:content) && n.content.present?
-           n.content.to_plain_text
-         else
-           n.body.to_s
-         end %>
+  <% if @list_of_notes.any? %>
+    <% @list_of_notes.each do |n| %>
+      <% preview_text =
+           if n.respond_to?(:content) && n.content.present?
+             n.content.to_plain_text
+           else
+             n.body.to_s
+           end %>
 
-    <a href="/notes/<%= n.id %>" class="note-row">
-      <div class="note-preview">
-        <%= preview_text.truncate(80) %>
-      </div>
-
-      <% if n.date.present? %>
-        <div class="note-date">
-          <%= n.date %>
+      <a href="/notes/<%= n.id %>" class="note-row">
+        <div class="note-preview">
+          <%= preview_text.truncate(80) %>
         </div>
-      <% end %>
-    </a>
 
+        <% if n.date.present? %>
+          <div class="note-date">
+            <%= n.date %>
+          </div>
+        <% end %>
+      </a>
+    <% end %>
+  <% else %>
+    <div class="notes-empty">
+      No notes yet.
+    </div>
   <% end %>
 </div>
