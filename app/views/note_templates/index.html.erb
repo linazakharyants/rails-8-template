@@ -91,24 +91,19 @@
 
 <h2 class="notes-section-title">Add a note</h2>
 
-<div class="note-form-card">
-  <form action="/insert_note" method="post">
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+<%= form_with url: "/insert_note", method: :post, scope: :note do |form| %>
+  <% if @selected_date.present? %>
+    <input type="hidden" name="query_date" value="<%= @selected_date %>">
+    <p class="note-date mb-3">Date: <%= @selected_date %></p>
+  <% end %>
 
-    <% if @selected_date.present? %>
-      <input type="hidden" name="query_date" value="<%= @selected_date %>">
-      <p class="note-date mb-3">Date: <%= @selected_date %></p>
-    <% end %>
+  <div class="note-editor">
+    <label class="fw-semibold mb-2 d-block">Note</label>
+    <%= form.rich_text_area :content %>
+  </div>
 
-    <div class="note-editor">
-      <label for="content_box" class="fw-semibold mb-2 d-block">Note</label>
-      <trix-editor input="query_content"></trix-editor>
-      <input id="query_content" type="hidden" name="query_content">
-    </div>
-
-    <button type="submit" class="btn btn-dark rounded-3 px-4">Save note</button>
-  </form>
-</div>
+  <button type="submit" class="btn btn-dark rounded-3 px-4">Save note</button>
+<% end %>
 
 <hr class="my-4">
 

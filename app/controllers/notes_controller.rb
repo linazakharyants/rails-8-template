@@ -20,61 +20,66 @@ class NotesController < ApplicationController
   end
 
   def create
-    the_note = Note.new
-    the_note.user_id = current_user.id
+  the_note = Note.new
+  the_note.user_id = current_user.id
 
-    if params["query_date"].present?
-      the_note.date = Date.parse(params["query_date"])
-    else
-      the_note.date = Date.current
-    end
-
-    day_entry = current_user.dayentries.where({ :date => the_note.date }).at(0)
-
-    if day_entry.nil?
-      day_entry = DayEntry.new
-      day_entry.user_id = current_user.id
-      day_entry.date = the_note.date
-      day_entry.highlight_of_the_day = ""
-      day_entry.save
-    end
-
-    content_value = params.dig("note", "content").presence || params["query_content"].to_s
-
-    if content_blank_for_trix?(content_value)
-      redirect_to("/notes", { :alert => "Note can't be empty." })
-      return
-    end
-
-    the_note.day_entry_id = day_entry.id
-    the_note.content = content_value
-
-    if the_note.save
-      redirect_to("/notes/#{the_note.id}", { :notice => "Note saved." })
-    else
-      redirect_to("/notes", { :alert => the_note.errors.full_messages.to_sentence })
-    end
+  if params["query_date"].present?
+    the_note.date = Date.parse(params["query_date"])
+  else
+    the_note.date = Date.current
   end
 
-  def update
-    the_id = params.fetch("path_id")
-    the_note = current_user.notes.where({ :id => the_id }).at(0)
+  day_entry = current_user.dayentries.where(date: the_note.date).first
 
-    content_value = params.dig("note", "content").presence || params["query_content"].to_s
-
-    if content_blank_for_trix?(content_value)
-      redirect_to("/notes/#{the_note.id}", { :alert => "Note can't be empty." })
-      return
-    end
-
-    the_note.content = content_value
-
-    if the_note.save
-      redirect_to("/notes/#{the_note.id}", { :notice => "Note updated." })
-    else
-      redirect_to("/notes/#{the_note.id}", { :alert => the_note.errors.full_messages.to_sentence })
-    end
+  if day_entry.nil?
+    day_entry = DayEntry.new
+    day_entry.user_id = current_user.id
+    day_entry.date = the_note.date
+    day_entry.highlight_of_the_day = ""
+    day_entry.save
   end
+
+  content_value = params.dig("note", "content").to_s
+
+  if content_blank_for_trix?(content_value)
+    redirect_to("/notes", alert: "Note can't be empty.")
+    return
+  end
+
+  the_note.day_entry_id = day_entry.id
+  the_note.content = content_value
+
+  if the_note.save
+    redirect_to("/notes/#{the_note.id}", notice: "Note saved.")
+  else
+    redirect_to("/notes", alert: the_note.errors.full_messages.to_sentence)
+  end
+end
+
+def update
+  the_id = params.fetch("path_id")
+  the_note = current_user.notes.where(id: the_id).first
+
+  if the_note.nil?
+    redirect_to("/notes", alert: "Note not found.")
+    return
+  end
+
+  content_value = params.dig("note", "content").to_s
+
+  if content_blank_for_trix?(content_value)
+    redirect_to("/notes/#{the_note.id}", alert: "Note can't be empty.")
+    return
+  end
+
+  the_note.content = content_value
+
+  if the_note.save
+    redirect_to("/notes/#{the_note.id}", notice: "Note updated.")
+  else
+    redirect_to("/notes/#{the_note.id}", alert: the_note.errors.full_messages.to_sentence)
+  end
+end
 
   def destroy
     the_id = params.fetch("path_id")
