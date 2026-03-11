@@ -46,13 +46,13 @@
   <h1 class="mb-0">Habit Tracker</h1>
 
   <div class="habit-show-actions">
-    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to habits</a>
-    <a href="/delete_habit/<%= @the_habit.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete habit</a>
+    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to Habits</a>
+    <a href="/delete_habit/<%= @the_habit.id %>" class="btn btn-outline-danger rounded-pill px-3">Delete Habit</a>
   </div>
 </div>
 
 <div class="habit-show-card">
-  <h2 class="h4 mb-3">Update habit</h2>
+  <h2 class="h4 mb-3">Update Habit</h2>
 
   <form action="/modify_habit/<%= @the_habit.id %>" method="post" class="habit-edit-form">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
@@ -73,6 +73,6 @@
              value="<%= @the_habit.description %>">
     </div>
 
-    <button type="submit" class="btn btn-dark rounded-3 px-4">Update habit</button>
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Update Habit</button>
   </form>
 </div>

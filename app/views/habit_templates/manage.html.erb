@@ -77,10 +77,10 @@
 </style>
 
 <div class="manage-header">
-  <h1 class="mb-0">Add a Habit to Track</h1>
+  <h1 class="mb-0">Add a Habit</h1>
 
   <div class="manage-actions">
-    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to tracker</a>
+    <a href="/habits" class="btn btn-outline-secondary rounded-pill px-3">Back to Habits</a>
     <a href="/" class="btn btn-outline-secondary rounded-pill px-3">Back to Calendar</a>
   </div>
 </div>
@@ -93,7 +93,7 @@
 
     <div class="form-row">
       <label for="name_box">Habit name</label>
-      <input type="text" id="name_box" name="query_name" placeholder="e.g. Gym, Read, No binge">
+      <input type="text" id="name_box" name="query_name" placeholder="What habit do you want to build? e.g. Read, Gym">
     </div>
 
     <div class="form-row">
@@ -101,12 +101,13 @@
       <input type="text" id="description_box" name="query_description">
     </div>
 
-    <button type="submit" class="btn btn-dark rounded-3 px-4">Add habit</button>
+    <button type="submit" class="btn btn-dark rounded-3 px-4">Save Habit</button>
   </form>
 </div>
 
 <div class="manage-card">
-  <h2 class="h4 mb-3">Your habits</h2>
+  <h2 class="h4 mb-3">Your Habits</h2>
+  <p class="small text-muted mb-3">Small steps, every day.</p>
 
   <div class="habit-list">
     <% @list_of_habits.each do |a_habit| %>
